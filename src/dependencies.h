@@ -13,7 +13,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_mixer.h>
 
-// Bibliotecas Lua.
+// Bibliotecas Lua (Linux e Windows).
 #ifdef __linux__
     #include "../lua54/lua.h"
     #include "../lua54/lualib.h"

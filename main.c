@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
     }
 
     // Variáveis para controle do tempo de cada frame.
-    Uint32 frameStart = 0;
+    Uint32 frameStart = 0;    
     Uint32 frameTime = 0;
 
     // Loop principal do jogo.

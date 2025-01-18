@@ -50,34 +50,43 @@ static _Bool createRenderer(Game *game) {
         fprintf(stderr, "Falha ao criar o renderizador: %s.\n", SDL_GetError());
         return false;
     }
+    // Define as dimensões da janela de visualização do renderizador.
+    game->viewport = (SDL_Rect) {
+        0, 0, SCREEN_WIDTH, SCREEN_HEIGHT
+    };
     return true;
 }
 
 // Função responsável por criar o jogador.
 static _Bool createPlayer(Game *game) {
-    // Define as dimensões do jogador em pixels.
-    const int playerWidth = 64;
-    const int playerheight = 64;
+    // Aloca memória para a estrutura de dados do jogador.
+    game->player = malloc(sizeof(Entity));
+    if (!game->player) {
+        fprintf(stderr, "Falha ao alocar mémoria para o jogador.\n");
+        return false;
+    }
+    // Zera a memória alocada para a estrutura da jogador.
+    memset(game->player, 0, sizeof(Entity));
+
     // Define o retângulo de origem da textura do jogador.
-    game->player.src = (SDL_Rect) {
+    game->player->src = (SDL_Rect) {
         0, 0, 32, 32
     };
     // Define a posição e o tamanho do jogador na tela.
-    game->player.dst = (SDL_Rect) {
-        (SCREEN_WIDTH - playerWidth) / 2, (SCREEN_HEIGHT - playerheight) / 2, playerWidth, playerheight
+    game->player->dst = (SDL_Rect) {
+        (SCREEN_WIDTH - PLAYER_WIDTH) / 2, (SCREEN_HEIGHT - PLAYER_HEIGHT) / 2, PLAYER_WIDTH, PLAYER_HEIGHT
     };
-    // Define a velocidade do jogador.
-    game->player.speed = 3;
+
     // Carrega a textura do jogador e caso ocorra erro, exibe uma mensagem.
-    game->player.texture = IMG_LoadTexture(game->renderer, "./img/player.png");
-    if (!game->player.texture) {
+    game->player->texture = IMG_LoadTexture(game->renderer, "./img/player.png");
+    if (!game->player->texture) {
         fprintf(stderr, "Falha ao carregar textura do jogador: %s\n", IMG_GetError());
         return false;
     }
     return true;
 }
 
-// Função responsável por criar uma masmorra.
+// Função responsável por criar um bloco.
 static _Bool createDungeon(Game *game) {
     // Acessa a tabela na pilha lua.
     lua_getglobal(game->L, "dungeon");
@@ -89,47 +98,67 @@ static _Bool createDungeon(Game *game) {
         return false;
     }
 
-    int i = 0;
-    int j = 0;
-    for (i = 0; i != DUNGEON_WIDTH; i++) {
-        for (j = 0; j != DUNGEON_HEIGHT; j++) {
+    // Aloca memória para a estrutura de dados da masmorra.
+    game->dungeon = malloc(sizeof(Dungeon));
+    if (!game->dungeon) {
+        fprintf(stderr, "Falha ao alocar mémoria para a masmorra.\n");
+        return false;
+    }
+    // Zera a memória alocada para a estrutura da masmorra.
+    memset(game->dungeon, 0, sizeof(Dungeon));
+
+    // Preenche a masmorra com blocos.
+    int i;
+    int j;
+    for (i = 0; i < DUNGEON_WIDTH; i++) {
+        for (j = 0; j < DUNGEON_HEIGHT; j++) {
             // Calcula o índice na tabela.
             int index = i * DUNGEON_HEIGHT + j + 1;
             // Coloca o índice na pilha para pegar o valor correspondente.
             lua_pushnumber(game->L, index);
             lua_gettable(game->L, -2);
+
             // Verifica se o valor é um número.
             if (lua_isnumber(game->L, -1)) {
-                game->dungeon.data[i][j] = (int)lua_tonumber(game->L, -1);
+                game->dungeon->block[i][j].type = (int)lua_tonumber(game->L, -1);
+                // Define se o bloco é sólido.
+                game->dungeon->block[i][j].isSolid = true;
             } else {
                 // Caso não seja um número, define um valor padrão.
-                game->dungeon.data[i][j] = AIR;
+                game->dungeon->block[i][j].type = AIR;
+                // Define se o bloco é sólido.
+                game->dungeon->block[i][j].isSolid = false;
             }
             // Remove o valor da pilha.
             lua_pop(game->L, 1);
+
+            // Define o retângulo de origem da textura do bloco.
+            game->dungeon->block[i][j].src = (SDL_Rect) {
+                0, 0, 32, 32
+            };
+            // Define a posição e o tamanho do bloco na tela.
+            game->dungeon->block[i][j].dst = (SDL_Rect) {
+                i * BLOCK_WIDTH, j * BLOCK_HEIGHT, BLOCK_WIDTH, BLOCK_HEIGHT
+            };
         }
     }
-    game->dungeon.dst = (SDL_Rect) {
-        0, 0, 32, 32
-    };
-    game->dungeon.src = (SDL_Rect) {
-        0, 0, 32, 32
-    };
-    // Carrega a textura dos blocos da masmorra e caso ocorra erro, exibe uma mensagem.
-    game->dungeon.texture = IMG_LoadTexture(game->renderer, "./img/dungeon.png");
-    if (!game->dungeon.texture) {
-        fprintf(stderr, "Falha ao carregar textura da masmorra: %s\n", IMG_GetError());
-        return false;
-    }
+
     // Lê o nível da masmorra.
     lua_getfield(game->L, -1, "level");
     if (lua_isnumber(game->L, -1)) {
-        game->dungeon.level = (int)lua_tonumber(game->L, -1);
+        game->dungeon->level = (int)lua_tonumber(game->L, -1);
     } else {
-        game->dungeon.level = 1;
+        game->dungeon->level = 1;
     }
     // Remove a tabela da pilha.
     lua_pop(game->L, 1);
+
+    // Carrega a textura da masmorra e caso ocorra erro, exibe uma mensagem.
+    game->dungeon->texture = IMG_LoadTexture(game->renderer, "./img/dungeon.png");
+    if (!game->dungeon->texture) {
+        fprintf(stderr, "Falha ao carregar texturas da masmorra: %s\n", IMG_GetError());
+        return false;
+    }
     return true;
 }
 
@@ -187,12 +216,12 @@ _Bool init(Game *game) {
         terminate(game);
         return false;
     }
-
     // Inicializa a posição da câmera.
     game->camera.position = (SDL_Point) {
-        (SCREEN_WIDTH - 320) / 2, (SCREEN_HEIGHT - 320) / 2
+        100, 200
     };
-
+    // Define a velocidade da câmera.
+    game->camera.speed = 5;
     return true;
 }
 

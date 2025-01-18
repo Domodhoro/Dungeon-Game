@@ -4,11 +4,11 @@
 // Função responsável por destruir as texturas carregadas no jogo.
 static void destroyTextures(Game *game) {
     // Verifica se as texturas existem e as destroem, liberando memória.
-    if (game->player.texture) {
-        SDL_DestroyTexture(game->player.texture);
+    if (game->player->texture) {
+        SDL_DestroyTexture(game->player->texture);
     }
-    if (game->dungeon.texture) {
-        SDL_DestroyTexture(game->dungeon.texture);
+    if (game->dungeon->texture) {
+        SDL_DestroyTexture(game->dungeon->texture);
     }
 }
 
@@ -22,6 +22,16 @@ void terminate(Game *game) {
     }
     if (game->window) {
         SDL_DestroyWindow(game->window);
+    }
+
+    // Destrói a masmorra, liberando memória.
+    if (game->dungeon) {
+        free(game->dungeon);
+    }
+
+    // Destrói o jogador, liberando memória.
+    if (game->player) {
+        free(game->player);
     }
 
     // Finaliza a bibliotecas do SDL.

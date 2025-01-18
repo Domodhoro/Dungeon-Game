@@ -10,11 +10,11 @@ typedef enum DIRECTION {
 	RIGHT
 } DIRECTION;
 
-// Define os tipos de blocos na masmorra.
-typedef enum DUNGEON_BLOCKS {
-    AIR = 0,
+// Define os tipos de blocos da masmorra.
+typedef enum BLOCK_TYPE {
+	AIR = 0,
     WOOD,
     STONE
-} DUNGEON_BLOCKS;
+} BLOCK_TYPE;
 
 #endif // ENUMS_H

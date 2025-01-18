@@ -2,7 +2,7 @@
 #define DEFS_H
 
 // Define o título da janela do jogo, a largura e a altura da tela (em pixels).
-#define SCREEN_TITLE "Meu jogo 2D"
+#define SCREEN_TITLE "Dungeon"
 #define SCREEN_WIDTH 1024
 #define SCREEN_HEIGHT 768
 
@@ -11,8 +11,16 @@
 // Este valor é usado para controlar a taxa de atualização do jogo.
 #define FRAME_TIME (1000 / FPS)
 
+// Define o tamanho do jogador.
+#define PLAYER_WIDTH 64
+#define PLAYER_HEIGHT 64
+
+// Define o tamanho dos blocos.
+#define BLOCK_WIDTH 32
+#define BLOCK_HEIGHT 32
+
 // Define o tamanho máximo de uma masmorra.
-#define DUNGEON_WIDTH 10
-#define DUNGEON_HEIGHT 10
+#define DUNGEON_WIDTH 8
+#define DUNGEON_HEIGHT 8
 
 #endif // DEFS_H
