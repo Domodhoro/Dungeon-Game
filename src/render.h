@@ -1,13 +1,13 @@
 #ifndef RENDER_H
 #define RENDER_H
 
-// Função responsável por renderizar o conteúdo na tela.
-void render(Game *game) {
-	// Define a cor de fundo da tela.
-    SDL_SetRenderDrawColor(game->renderer, 100, 100, 100, 255);
-    SDL_RenderClear(game->renderer);
+// Renderiza o jogador.
+static void renderPlayer(Game *game) {
+    SDL_RenderCopy(game->renderer, game->player->texture, &game->player->src, &game->player->dst);
+}
 
-    // Desenha os blocos.
+// Renderiza a masmorra.
+static void renderDungeon(Game *game) {
     int i;
     int j;
     for (i = 0; i < DUNGEON_WIDTH; i++) {
@@ -22,12 +22,22 @@ void render(Game *game) {
                         32, 0, 32, 32
                     };
                 }
+                // Renderiza os blocos da masmorra.
                 SDL_RenderCopy(game->renderer, game->dungeon->texture, &game->dungeon->block[i][j].src, &game->dungeon->block[i][j].dst);
             }
         }
     }
-    // Desenha o jogador.
-    SDL_RenderCopy(game->renderer, game->player->texture, &game->player->src, &game->player->dst);
+}
+
+// Função responsável por renderizar o conteúdo na tela.
+void render(Game *game) {
+	// Define a cor de fundo da tela.
+    SDL_SetRenderDrawColor(game->renderer, 100, 100, 100, 255);
+    SDL_RenderClear(game->renderer);
+
+    // Renderiza o jogo.
+    renderDungeon(game);
+    renderPlayer(game);
     
     // Apresenta o conteúdo renderizado na tela.
     SDL_RenderSetViewport(game->renderer, &game->viewport);

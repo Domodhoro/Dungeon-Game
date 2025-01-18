@@ -48,6 +48,8 @@ int main(int argc, char *argv[]) {
     // Termina o jogo e libera recursos alocados.
     terminate(game);
     // Libera a memória alocada para a estrutura do jogo e encerra o programa com sucesso.
-    free(game);
+    if (game) {
+        free(game);
+    }
     return 0;
 }

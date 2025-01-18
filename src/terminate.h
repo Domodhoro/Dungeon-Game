@@ -28,7 +28,6 @@ void terminate(Game *game) {
     if (game->dungeon) {
         free(game->dungeon);
     }
-
     // Destrói o jogador, liberando memória.
     if (game->player) {
         free(game->player);
@@ -40,6 +39,7 @@ void terminate(Game *game) {
     IMG_Quit();
     SDL_Quit();
 
+    // Fecha o estado lua.
     lua_close(game->L);
 }
 

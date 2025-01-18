@@ -10,6 +10,8 @@ typedef struct Camera {
 // Estrutura que armazena os estados do mouse.
 typedef struct Mouse {
     SDL_Point position;
+    _Bool leftButton;
+    _Bool rightButton;
 } Mouse;
 
 // Estrutura que armazena os estados das teclas do teclado.
