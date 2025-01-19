@@ -5,7 +5,6 @@
 void handleEvents(Game *game) {
 	// Verifica se há eventos na fila de eventos do SDL.
     while (SDL_PollEvent(&game->event)) {
-
         switch (game->event.type) {
         // Se o evento for de fechar a janela, o jogo termina.
         case SDL_QUIT:
