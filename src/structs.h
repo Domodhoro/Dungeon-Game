@@ -1,6 +1,28 @@
 #ifndef STRUCTS_H
 #define STRUCTS_H
 
+// Estrututa que representa um bloco.
+typedef struct Block {
+    SDL_Rect dst;
+    SDL_Rect src;
+    BLOCK_TYPE type;
+    BOOL isSolid;
+} Block;
+
+// Estrututa que representa uma masmorra.
+typedef struct Dungeon {
+    Block block[DUNGEON_WIDTH][DUNGEON_HEIGHT];
+    SDL_Texture *texture;
+    int level;
+} Dungeon;
+
+// Estrutura que representa um objeto do jogo.
+typedef struct Entity {
+    SDL_Rect dst;
+    SDL_Rect src;
+    SDL_Texture *texture;
+} Entity;
+
 // Define a câmera do jogo.
 typedef struct Camera {
     SDL_Point position;
@@ -10,36 +32,14 @@ typedef struct Camera {
 // Estrutura que armazena os estados do mouse.
 typedef struct Mouse {
     SDL_Point position;
-    _Bool leftButton;
-    _Bool rightButton;
+    BOOL leftButton;
+    BOOL rightButton;
 } Mouse;
 
 // Estrutura que armazena os estados das teclas do teclado.
 typedef struct Keyboard {
     const Uint8 *states;
 } Keyboard;
-
-// Estrutura que representa um objeto do jogo.
-typedef struct Entity {
-    SDL_Rect dst;
-    SDL_Rect src;
-    SDL_Texture *texture;
-} Entity;
-
-// Estrututa que representa um bloco.
-typedef struct Block {
-    SDL_Rect dst;
-    SDL_Rect src;
-    BLOCK_TYPE type;
-    _Bool isSolid;
-} Block;
-
-// Estrututa que representa uma masmorra.
-typedef struct Dungeon {
-    Block block[DUNGEON_WIDTH][DUNGEON_HEIGHT];
-    SDL_Texture *texture;
-    int level;
-} Dungeon;
 
 // Estrutura principal que representa os estados do jogo.
 typedef struct Game {
@@ -51,7 +51,10 @@ typedef struct Game {
     SDL_Rect viewport;
     SDL_Event event;
 
-    _Bool running;
+    Uint32 frameStart;    
+    Uint32 frameTime;
+
+    BOOL running;
 
     Keyboard keyboard;
     Mouse mouse;

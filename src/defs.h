@@ -1,8 +1,18 @@
 #ifndef DEFS_H
 #define DEFS_H
 
+// Define alguns operadores lógicos.
+#define AND &&
+#define OR ||
+#define NOT !
+
+// Define algumas constantes booleanas.
+#define BOOL int
+#define TRUE 1
+#define FALSE 0
+
 // Define o título da janela do jogo, a largura e a altura da tela (em pixels).
-#define SCREEN_TITLE "Dungeon"
+#define SCREEN_TITLE "Dungeon (version 1.0)."
 #define SCREEN_WIDTH 1024
 #define SCREEN_HEIGHT 768
 

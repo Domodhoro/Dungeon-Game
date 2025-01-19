@@ -1,18 +1,10 @@
 // Incluindo as bibliotecas e cabeçalhos necessários para o jogo.
 #include "./src/dependencies.h"
-#include "./src/defs.h"
-#include "./src/enums.h"
-#include "./src/structs.h"
-#include "./src/render.h"
-#include "./src/update.h"
-#include "./src/handleEvents.h"
-#include "./src/terminate.h"
-#include "./src/init.h"
 
 int main(int argc, char *argv[]) {
     // Aloca memória para a estrutura de dados do jogo.
     Game *game = malloc(sizeof(Game));
-    if (!game) {
+    if (NOT game) {
         fprintf(stderr, "Falha ao alocar mémoria para o jogo.\n");
         return -1;
     }
@@ -20,36 +12,36 @@ int main(int argc, char *argv[]) {
     memset(game, 0, sizeof(Game));
 
     // Inicializa o jogo, se falhar, libera a memória e termina o programa.
-    if (!init(game)) {
+    if (NOT init(game)) {
         free(game);
         return -1;
     }
 
     // Variáveis para controle do tempo de cada frame.
-    Uint32 frameStart = 0;    
-    Uint32 frameTime = 0;
-
+    game->frameStart = 0;    
+    game->frameTime = 0;
     // Loop principal do jogo.
-    game->running = true;
+    game->running = TRUE;
     while (game->running) {
         // Marca o início do frame atual.
-        frameStart = SDL_GetTicks();
+        game->frameStart = SDL_GetTicks();
         // Processa os eventos, atualiza a lógica do jogo e renderiza a cena atual.
         handleEvents(game);
         update(game);
         render(game);
         // Calcula o tempo gasto no processamento do frame.
-        frameTime = SDL_GetTicks() - frameStart;
+        game->frameTime = SDL_GetTicks() - game->frameStart;
         // Se o tempo do frame for menor que o tempo alvo (FRAME_TIME), espera o tempo restante.
-        if (frameTime < (Uint32)FRAME_TIME) {
-            SDL_Delay((Uint32)FRAME_TIME - frameTime);
+        if (game->frameTime < (Uint32)FRAME_TIME) {
+            SDL_Delay((Uint32)FRAME_TIME - game->frameTime);
         }
     }
     // Termina o jogo e libera recursos alocados.
-    terminate(game);
+    finish(game);
     // Libera a memória alocada para a estrutura do jogo e encerra o programa com sucesso.
     if (game) {
         free(game);
+        game = NULL;
     }
     return 0;
 }
