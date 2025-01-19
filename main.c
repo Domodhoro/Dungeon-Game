@@ -1,10 +1,11 @@
 // Incluindo as bibliotecas e cabeçalhos necessários para o jogo.
 #include "./src/dependencies.h"
 
+// Função principal.
 int main(int argc, char *argv[]) {
     // Aloca memória para a estrutura de dados do jogo.
     Game *game = malloc(sizeof(Game));
-    if (NOT game) {
+    if (!game) {
         fprintf(stderr, "Falha ao alocar mémoria para o jogo.\n");
         return -1;
     }
@@ -12,7 +13,7 @@ int main(int argc, char *argv[]) {
     memset(game, 0, sizeof(Game));
 
     // Inicializa o jogo, se falhar, libera a memória e termina o programa.
-    if (NOT init(game)) {
+    if (!init(game)) {
         free(game);
         return -1;
     }
@@ -21,7 +22,7 @@ int main(int argc, char *argv[]) {
     game->frameStart = 0;    
     game->frameTime = 0;
     // Loop principal do jogo.
-    game->running = TRUE;
+    game->running = true;
     while (game->running) {
         // Marca o início do frame atual.
         game->frameStart = SDL_GetTicks();

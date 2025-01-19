@@ -6,7 +6,7 @@ typedef struct Block {
     SDL_Rect dst;
     SDL_Rect src;
     BLOCK_TYPE type;
-    BOOL isSolid;
+    _Bool isSolid;
 } Block;
 
 // Estrututa que representa uma masmorra.
@@ -23,6 +23,13 @@ typedef struct Entity {
     SDL_Texture *texture;
 } Entity;
 
+// Estrututa que representa o inventário do jogador.
+typedef struct Inventory {
+    SDL_Rect dst[INVENTORY_SIZE];
+    SDL_Rect src[INVENTORY_SIZE];
+    SDL_Texture *texture;
+} Inventory;
+
 // Define a câmera do jogo.
 typedef struct Camera {
     SDL_Point position;
@@ -32,8 +39,8 @@ typedef struct Camera {
 // Estrutura que armazena os estados do mouse.
 typedef struct Mouse {
     SDL_Point position;
-    BOOL leftButton;
-    BOOL rightButton;
+    _Bool leftButton;
+    _Bool rightButton;
 } Mouse;
 
 // Estrutura que armazena os estados das teclas do teclado.
@@ -44,7 +51,6 @@ typedef struct Keyboard {
 // Estrutura principal que representa os estados do jogo.
 typedef struct Game {
     lua_State *L;
-
     SDL_Window *window;
     SDL_Renderer *renderer;
 
@@ -54,13 +60,12 @@ typedef struct Game {
     Uint32 frameStart;    
     Uint32 frameTime;
 
-    BOOL running;
+    _Bool running;
 
     Keyboard keyboard;
     Mouse mouse;
-
     Camera camera;
-
+    Inventory inventory;
     Entity *player;
     Dungeon *dungeon;
 } Game;

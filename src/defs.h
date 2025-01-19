@@ -1,18 +1,8 @@
 #ifndef DEFS_H
 #define DEFS_H
 
-// Define alguns operadores lógicos.
-#define AND &&
-#define OR ||
-#define NOT !
-
-// Define algumas constantes booleanas.
-#define BOOL int
-#define TRUE 1
-#define FALSE 0
-
 // Define o título da janela do jogo, a largura e a altura da tela (em pixels).
-#define SCREEN_TITLE "Dungeon (version 1.0)."
+#define SCREEN_TITLE "Dungeon (version 1.0)"
 #define SCREEN_WIDTH 1024
 #define SCREEN_HEIGHT 768
 
@@ -30,7 +20,10 @@
 #define BLOCK_HEIGHT 32
 
 // Define o tamanho máximo de uma masmorra.
-#define DUNGEON_WIDTH 8
-#define DUNGEON_HEIGHT 8
+#define DUNGEON_WIDTH 32
+#define DUNGEON_HEIGHT 32
+
+// Define o tamanho do inventário.
+#define INVENTORY_SIZE 10
 
 #endif // DEFS_H

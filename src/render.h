@@ -8,10 +8,8 @@ static void renderPlayer(Game *game) {
 
 // Renderiza a masmorra.
 static void renderDungeon(Game *game) {
-    int i;
-    int j;
-    for (i = 0; i < DUNGEON_WIDTH; i++) {
-        for (j = 0; j < DUNGEON_HEIGHT; j++) {
+    for (int i = 0; i < DUNGEON_WIDTH; i++) {
+        for (int j = 0; j < DUNGEON_HEIGHT; j++) {
             if (game->dungeon->block[i][j].type != AIR) {
                 if (game->dungeon->block[i][j].type == WOOD) {
                     game->dungeon->block[i][j].src = (SDL_Rect) {
@@ -29,14 +27,22 @@ static void renderDungeon(Game *game) {
     }
 }
 
+// Renderiza o inventário do jogador.
+static void renderInventory(Game *game) {
+    for (int i = 0; i < INVENTORY_SIZE; i++) {
+        SDL_RenderCopy(game->renderer, game->inventory.texture, &game->inventory.src[i], &game->inventory.dst[i]);
+    }
+}
+
 // Função responsável por renderizar o conteúdo na tela.
 void render(Game *game) {
 	// Define a cor de fundo da tela.
-    SDL_SetRenderDrawColor(game->renderer, 100, 100, 100, 255);
+    SDL_SetRenderDrawColor(game->renderer, 0, 0, 0, 255);
     SDL_RenderClear(game->renderer);
 
-    // Renderiza o jogo.
+    // Renderiza os elementos do jogo.
     renderDungeon(game);
+    renderInventory(game);
     renderPlayer(game);
     
     // Apresenta o conteúdo renderizado na tela.

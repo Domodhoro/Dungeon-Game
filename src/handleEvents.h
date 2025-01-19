@@ -8,25 +8,25 @@ void handleEvents(Game *game) {
         switch (game->event.type) {
         // Se o evento for de fechar a janela, o jogo termina.
         case SDL_QUIT:
-            game->running = FALSE;
+            game->running = false;
             break;
         // Verifica eventos de clique do mouse.
         case SDL_MOUSEBUTTONDOWN:
             if (game->event.button.button == SDL_BUTTON_LEFT) {
                 // Botão esquerdo pressionado.
-                game->mouse.leftButton = TRUE;
+                game->mouse.leftButton = true;
             } else if (game->event.button.button == SDL_BUTTON_RIGHT) {
                 // Botão direito pressionado.
-                game->mouse.rightButton = TRUE;
+                game->mouse.rightButton = true;
             }
             break;
         case SDL_MOUSEBUTTONUP:
             if (game->event.button.button == SDL_BUTTON_LEFT) {
                 // Botão esquerdo solto.
-                game->mouse.leftButton = FALSE;
+                game->mouse.leftButton = false;
             } else if (game->event.button.button == SDL_BUTTON_RIGHT) {
                 // Botão direito solto.
-                game->mouse.rightButton = FALSE;
+                game->mouse.rightButton = false;
             }
             break;
         }

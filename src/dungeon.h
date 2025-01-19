@@ -8,51 +8,49 @@ static void setBlockType(Game *game, const int i, const int j) {
 	// Define as propriedades de cada bloco.
     switch (game->dungeon->block[i][j].type) {
     case AIR:
-    	game->dungeon->block[i][j].isSolid = FALSE;
+    	game->dungeon->block[i][j].isSolid = false;
     	break;
     case WOOD:
-    	game->dungeon->block[i][j].isSolid = FALSE;
+    	game->dungeon->block[i][j].isSolid = false;
     	break;
     case STONE:
-    	game->dungeon->block[i][j].isSolid = TRUE;
+    	game->dungeon->block[i][j].isSolid = true;
     	break;
     }
 }
 
 // Função responsável por criar uma masmorra.
-BOOL createDungeon(Game *game) {
+_Bool createDungeon(Game *game) {
     // Aloca memória para a estrutura de dados da masmorra.
     game->dungeon = malloc(sizeof(Dungeon));
-    if (NOT game->dungeon) {
+    if (!game->dungeon) {
         fprintf(stderr, "Falha ao alocar memória para a masmorra.\n");
-        return FALSE;
+        return false;
     }
     // Zera a memória alocada para a estrutura da masmorra.
     memset(game->dungeon, 0, sizeof(Dungeon));
 
     // Acessa a tabela principal.
     lua_getglobal(game->L, "dungeon");
-    if (NOT lua_istable(game->L, -1)) {
+    if (!lua_istable(game->L, -1)) {
         fprintf(stderr, "Erro ao acessar a tabela 'dungeon': %s\n", lua_tostring(game->L, -1));
         lua_pop(game->L, 1);
-        return FALSE;
+        return false;
     }
 
     // Acessa a sala específica usando o nome fornecido.
-    const char *roomName = "room_3";
+    const char *roomName = "room_2";
     lua_getfield(game->L, -1, roomName);
-    if (NOT lua_istable(game->L, -1)) {
+    if (!lua_istable(game->L, -1)) {
         fprintf(stderr, "Erro ao acessar a sala '%s': %s\n", roomName, lua_tostring(game->L, -1));
          // Remove a tabela principal e o erro da pilha.
         lua_pop(game->L, 2);
-        return FALSE;
+        return false;
     }
 
     // Preenche a masmorra com blocos a partir dos dados da tabela lua.
-    int i;
-    int j;
-    for (i = 0; i < DUNGEON_WIDTH; i++) {
-        for (j = 0; j < DUNGEON_HEIGHT; j++) {
+    for (int i = 0; i < DUNGEON_WIDTH; i++) {
+        for (int j = 0; j < DUNGEON_HEIGHT; j++) {
             // Calcula o índice na tabela.
             int index = i * DUNGEON_HEIGHT + j + 1;
             lua_pushnumber(game->L, index);
@@ -65,7 +63,7 @@ BOOL createDungeon(Game *game) {
             } else {
             	// Em caso de erro na leitura da tabela define o bloco como ar.
                 game->dungeon->block[i][j].type = AIR;
-                game->dungeon->block[i][j].isSolid = FALSE;
+                game->dungeon->block[i][j].isSolid = false;
             }
             // Remove o valor da pilha.
             lua_pop(game->L, 1);
@@ -92,11 +90,11 @@ BOOL createDungeon(Game *game) {
 
     // Carrega a textura da masmorra.
     game->dungeon->texture = IMG_LoadTexture(game->renderer, "./img/dungeon.png");
-    if (NOT game->dungeon->texture) {
+    if (!game->dungeon->texture) {
         fprintf(stderr, "Falha ao carregar texturas da masmorra: %s\n", IMG_GetError());
-        return FALSE;
+        return false;
     }
-    return TRUE;
+    return true;
 }
 
 #endif // DUNGEON_H

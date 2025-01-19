@@ -12,6 +12,10 @@ static void destroyTextures(Game *game) {
         SDL_DestroyTexture(game->dungeon->texture);
         game->dungeon->texture = NULL;
     }
+    if (game->inventory.texture) {
+        SDL_DestroyTexture(game->inventory.texture);
+        game->inventory.texture = NULL;
+    }
 }
 
 // Função responsável por encerrar o jogo e liberar todos os recursos alocados.

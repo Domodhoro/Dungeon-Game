@@ -25,10 +25,8 @@ static void updatePlayerTexture(Game *game, const DIRECTION direction) {
 
 // Verifica colisões.
 static void checkCollision(Game *game, const SDL_Point cameraPrev) {
-    int i;
-    int j;
-    for (i = 0; i < DUNGEON_WIDTH; i++) {
-        for (j = 0; j < DUNGEON_HEIGHT; j++) {
+    for (int i = 0; i < DUNGEON_WIDTH; i++) {
+        for (int j = 0; j < DUNGEON_HEIGHT; j++) {
             if (game->dungeon->block[i][j].type != AIR) {
                 if (game->dungeon->block[i][j].isSolid) {
                     SDL_Rect blockDst = game->dungeon->block[i][j].dst;
@@ -80,10 +78,8 @@ void update(Game *game) {
     checkCollision(game, cameraPrev);
 
     // Atualiza a posição dos blocos somente se não houver colisão.
-    int i;
-    int j;
-    for (i = 0; i < DUNGEON_WIDTH; i++) {
-        for (j = 0; j < DUNGEON_HEIGHT; j++) {
+    for (int i = 0; i < DUNGEON_WIDTH; i++) {
+        for (int j = 0; j < DUNGEON_HEIGHT; j++) {
             game->dungeon->block[i][j].dst.x = i * BLOCK_WIDTH + game->camera.position.x;
             game->dungeon->block[i][j].dst.y = j * BLOCK_HEIGHT + game->camera.position.y;
         }
