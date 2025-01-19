@@ -147,7 +147,7 @@ BOOL init(Game *game) {
         return FALSE;
     }
 
-    // Inicializa a posição da câmera.
+    // Inicializa a câmera.
     initCamera(game);
     return TRUE;
 }
