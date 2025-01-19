@@ -39,7 +39,7 @@ _Bool createDungeon(Game *game) {
     }
 
     // Acessa a sala específica usando o nome fornecido.
-    const char *roomName = "room_2";
+    const char *roomName = "room_3";
     lua_getfield(game->L, -1, roomName);
     if (!lua_istable(game->L, -1)) {
         fprintf(stderr, "Erro ao acessar a sala '%s': %s\n", roomName, lua_tostring(game->L, -1));
