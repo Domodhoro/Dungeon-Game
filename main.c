@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
     game->frameTime = 0;
     // Loop principal do jogo.
     game->running = true;
-    while (game->running) {
+    do {
         // Marca o início do frame atual.
         game->frameStart = SDL_GetTicks();
         // Processa os eventos, atualiza a lógica do jogo e renderiza a cena atual.
@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
         if (game->frameTime < (Uint32)FRAME_TIME) {
             SDL_Delay((Uint32)FRAME_TIME - game->frameTime);
         }
-    }
+    } while (game->running);
     // Termina o jogo e libera recursos alocados.
     finish(game);
     // Libera a memória alocada para a estrutura do jogo e encerra o programa com sucesso.
