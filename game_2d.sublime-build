@@ -1,5 +1,5 @@
 {
-    "shell_cmd": "bash -c 'cd \"${file_path}\" && gcc -o \"Game\" \"${file}\" -lm -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer \"liblua54.a\" && ./\"Game\"'",
+    "shell_cmd": "bash -c 'cd \"${file_path}\" && gcc -std=c11 -o \"Game\" \"${file}\" -lm -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer \"liblua54.a\" && ./\"Game\"'",
     "file_regex": "^(...*?):([0-9]*):?([0-9]*)",
     "working_dir": "${file_path}",
     "selector": "main.c, source.c"
