@@ -30,6 +30,20 @@ typedef struct Inventory {
     SDL_Texture *texture;
 } Inventory;
 
+// Estrutura para texto.
+typedef struct Text {
+    SDL_Texture *texture;
+    SDL_Rect dst;
+} Text;
+
+// Estrutura para o menu principal do jogo.
+typedef struct MainMenu {
+    SDL_Rect src[3];
+    SDL_Rect dst[3];
+    SDL_Texture *texture;
+    Text text[3];
+} MainMenu;
+
 // Define a câmera do jogo.
 typedef struct Camera {
     SDL_Point position;
@@ -48,15 +62,10 @@ typedef struct Keyboard {
     const Uint8 *states;
 } Keyboard;
 
-// Estrutura para texto.
-typedef struct Text {
-    TTF_Font *font;
-    SDL_Texture *texture;
-    SDL_Rect dst;
-} Text;
-
 // Estrutura principal que representa os estados do jogo.
 typedef struct Game {
+    GAME_STATE state;
+
     lua_State *L;
     SDL_Window *window;
     SDL_Renderer *renderer;
@@ -70,11 +79,14 @@ typedef struct Game {
 
     _Bool running;
 
+    TTF_Font *font;
+
     Keyboard keyboard;
     Mouse mouse;
     Camera camera;
-    Inventory inventory;
-    Text text;
+
+    MainMenu *mainMenu;
+    Inventory *inventory;
     Entity *player;
     Dungeon *dungeon;
 } Game;

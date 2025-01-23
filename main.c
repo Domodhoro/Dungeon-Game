@@ -13,7 +13,8 @@ int main(int argc, char *argv[]) {
     memset(game, 0, sizeof(Game));
 
     // Inicializa o jogo, se falhar, libera a memória e encerra o programa.
-    if (!init(game)) {
+    game->running = init(game);
+    if (!game->running) {
         free(game);
         game = NULL;
         return -1;
@@ -34,12 +35,14 @@ int main(int argc, char *argv[]) {
             SDL_Delay((Uint32)FRAME_TIME - game->frameTime);
         }
     }
+
     // Termina o jogo e libera recursos alocados.
     finish(game);
-    // Libera a memória alocada para a estrutura do jogo e encerra o programa com sucesso.
+    // Libera a memória alocada para a estrutura do jogo.
     if (game) {
         free(game);
         game = NULL;
     }
+    // Encerra o programa com sucesso.
     return 0;
 }

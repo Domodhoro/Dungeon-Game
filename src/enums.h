@@ -1,6 +1,12 @@
 #ifndef ENUMS_H
 #define ENUMS_H
 
+// Estados do programa.
+typedef enum GAME_STATE {
+	MAIN_MENU = 0,
+	ACTIVE
+} GAME_STATE;
+
 // Define as direções do jogador.
 typedef enum DIRECTION {
 	NONE = 0,
