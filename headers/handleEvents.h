@@ -26,29 +26,29 @@ void handleEvents(Game *game) {
         case SDL_MOUSEBUTTONDOWN:
             if (game->event.button.button == SDL_BUTTON_LEFT) {
                 // Botão esquerdo pressionado.
-                game->mouse.leftButton = true;
+                game->userInputs.mouse.leftButton = true;
             } else if (game->event.button.button == SDL_BUTTON_RIGHT) {
                 // Botão direito pressionado.
-                game->mouse.rightButton = true;
+                game->userInputs.mouse.rightButton = true;
             }
             break;
         case SDL_MOUSEBUTTONUP:
             if (game->event.button.button == SDL_BUTTON_LEFT) {
                 // Botão esquerdo solto.
-                game->mouse.leftButton = false;
+                game->userInputs.mouse.leftButton = false;
             } else if (game->event.button.button == SDL_BUTTON_RIGHT) {
                 // Botão direito solto.
-                game->mouse.rightButton = false;
+                game->userInputs.mouse.rightButton = false;
             }
             break;
         }
     }
 
     // Retorna as coordenadas atuais do cursor do mouse.
-    SDL_GetMouseState(&game->mouse.position.x, &game->mouse.position.y);
+    SDL_GetMouseState(&game->userInputs.mouse.position.x, &game->userInputs.mouse.position.y);
 
     // Atualiza o estado atual do teclado.
-    game->keyboard.states = SDL_GetKeyboardState(NULL);
+    game->userInputs.keyboard.states = SDL_GetKeyboardState(NULL);
 }
 
 #endif // HANDLE_EVENTS_H

@@ -21,14 +21,6 @@ static _Bool initSDL(Game *game) {
         SDL_Quit();
         return DEU_MUITO_RUIM;
     }
-    // Abre e carregar a fonte ttf.
-    game->font[0] = TTF_OpenFont("./fonts/04B_03__.TTF", FONT_SIZE);
-    if (!game->font[0]) {
-        fprintf(stderr, "Falha ao carregar a fonte: %s\n", TTF_GetError());
-        IMG_Quit();
-        SDL_Quit();
-        return DEU_MUITO_RUIM;
-    }
     // Inicializa a biblioteca para manipulação de áudio.
     if (Mix_Init(MIX_INIT_MP3) < 0) {
         fprintf(stderr, "Falha ao inicializar SDL_mixer: %s.\n", Mix_GetError());
@@ -40,17 +32,38 @@ static _Bool initSDL(Game *game) {
     return true;
 }
 
+// Função responsável por iniciar a câmera.
+static void initCamera(Game *game) {
+    // Define a posição inicial da câmera.
+    game->camera.position = (SDL_Point) {
+        0, 0
+    };
+    // Define a velocidade inicial.
+    game->camera.speed = 5;
+}
+
 // Função que carrega as texturas do jogo.
 static _Bool loadTexture(Game *game) {
-    game->dungeon.texture = IMG_LoadTexture(game->renderer, "./sprites/dungeon.png");
-    game->player.texture = IMG_LoadTexture(game->renderer, "./sprites/player.png");
-    game->inventory.texture = IMG_LoadTexture(game->renderer, "./sprites/inventory.png");
-    game->mainMenu.texture = IMG_LoadTexture(game->renderer, "./sprites/mainMenu.png");
+    game->dungeon.texture            = IMG_LoadTexture(game->renderer, "./sprites/dungeon.png");
+    game->player.texture             = IMG_LoadTexture(game->renderer, "./sprites/player.png");
+    game->inventory.texture          = IMG_LoadTexture(game->renderer, "./sprites/inventory.png");
+    game->mainMenu.texture           = IMG_LoadTexture(game->renderer, "./sprites/mainMenu.png");
     game->mainMenu.backgroundTexture = IMG_LoadTexture(game->renderer, "./sprites/mainMenuBackground.png");
 
     // Retorna falso em caso de erro.
     if (!game->dungeon.texture || !game->player.texture || !game->inventory.texture || !game->mainMenu.texture || !game->mainMenu.backgroundTexture) {
         fprintf(stderr, "Falha ao carregar texturas da masmorra: %s\n", IMG_GetError());
+        return DEU_MUITO_RUIM;
+    }
+    return true;
+}
+
+// Função que carrega a fonte de texto.
+static _Bool loadFont(Game *game) {
+    // Abre e carregar a fonte ttf.
+    game->font[0] = TTF_OpenFont("./fonts/04B_03__.TTF", FONT_SIZE);
+    if (!game->font[0]) {
+        fprintf(stderr, "Falha ao carregar a fonte: %s\n", TTF_GetError());
         return DEU_MUITO_RUIM;
     }
     return true;
@@ -116,18 +129,14 @@ _Bool init(Game *game) {
         0, 0, SCREEN_WIDTH, SCREEN_HEIGHT
     };
 
-    // Carrega as textutas do jogo.
-    if (!loadTexture(game)) {
+    // Carrega as textutas e a fonte do jogo.
+    if (!loadTexture(game) || !loadFont(game)) {
         finish(game);
         return DEU_MUITO_RUIM;
     }
 
-    // Define a posição inicial da câmera.
-    game->camera.position = (SDL_Point) {
-        0, 0
-    };
-    // Define a velocidade inicial.
-    game->camera.speed = 5;
+    // Inicializa a câmera.
+    initCamera(game);
 
     // Configura o estado do jogo para o menu principal.
     game->state = MAIN_MENU;

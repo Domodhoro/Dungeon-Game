@@ -7,9 +7,9 @@ void update(Game *game) {
     case MAIN_MENU:
         // Verifica qual dos botões do menu principal foi clicado.
         for (int i = 0; i < MAX_MAIN_MENU_BUTTONS; i++) {
-            if (isCursorInsideRect(&game->mouse.position, &game->mainMenu.button[i].dst)) {
+            if (isCursorInsideRect(&game->userInputs.mouse.position, &game->mainMenu.button[i].dst)) {
                 game->mainMenu.button[i].src.y = 32;
-                if (game->mouse.leftButton) {
+                if (game->userInputs.mouse.leftButton) {
                     if (i == 0) {
                         game->state = ACTIVE;
                     } else if (i == 1) {
@@ -28,22 +28,22 @@ void update(Game *game) {
         SDL_Point cameraPrev = game->camera.position;
 
         // Move a câmera para cima.
-        if (game->keyboard.states[SDL_SCANCODE_W]) {
+        if (game->userInputs.keyboard.states[SDL_SCANCODE_W]) {
             direction = UP;
             game->camera.position.y += game->camera.speed;
         }
         // Move a câmera para a esquerda.
-        if (game->keyboard.states[SDL_SCANCODE_A]) {
+        if (game->userInputs.keyboard.states[SDL_SCANCODE_A]) {
             direction = LEFT;
             game->camera.position.x += game->camera.speed;
         }
         // Move a câmera para baixo.
-        if (game->keyboard.states[SDL_SCANCODE_S]) {
+        if (game->userInputs.keyboard.states[SDL_SCANCODE_S]) {
             direction = DOWN;
             game->camera.position.y -= game->camera.speed;
         }
         // Move a câmera para a direita.
-        if (game->keyboard.states[SDL_SCANCODE_D]) {
+        if (game->userInputs.keyboard.states[SDL_SCANCODE_D]) {
             direction = RIGHT;
             game->camera.position.x -= game->camera.speed;
         }

@@ -2,7 +2,7 @@
 #define SETUP_H
 
 // Função responsável por criar e configurar uma masmorra.
-static _Bool setupDungeon(Game *game) {
+static _Bool setupDungeon(Game *game, const char *roomName) {
     // Acessa a tabela principal.
     lua_getglobal(game->L, "dungeon");
     if (!lua_istable(game->L, -1)) {
@@ -12,7 +12,6 @@ static _Bool setupDungeon(Game *game) {
     }
 
     // Acessa a sala específica usando o nome fornecido.
-    const char *roomName = "room_1";
     lua_getfield(game->L, -1, roomName);
     if (!lua_istable(game->L, -1)) {
         fprintf(stderr, "Erro ao acessar a sala '%s': %s\n", roomName, lua_tostring(game->L, -1));
@@ -91,24 +90,26 @@ static void setupInventory(Game *game) {
 // Função responsável por criar e configurar o menu principal do jogo.
 static _Bool setupMainMenu(Game *game) {
     // Define a textura dos botões e o posicionamento na tela.
-    const int buttonWidth = 5 * 32;
-    const int buttonHeight = 32;
+    const int buttonWidth    = 5 * 32;
+    const int buttonHeight   = 32;
+    const int buttonIndent_1 = 150;
+    const int buttonindent_2 = 100;
     // Botão 'start'.
     game->mainMenu.button[0].src = (SDL_Rect) {
         0, 0, buttonWidth, buttonHeight
     };
     game->mainMenu.button[0].dst = (SDL_Rect) {
-        (SCREEN_WIDTH - buttonWidth) / 2, (SCREEN_HEIGHT - buttonHeight) / 2 - 250, buttonWidth, buttonHeight
+        (SCREEN_WIDTH - buttonWidth) / 2, (SCREEN_HEIGHT - buttonHeight) / 2 - buttonIndent_1, buttonWidth, buttonHeight
     };
     // Botão 'exit'.
     game->mainMenu.button[1].src = (SDL_Rect) {
         0, 0, buttonWidth, buttonHeight
     };
     game->mainMenu.button[1].dst = (SDL_Rect) {
-        (SCREEN_WIDTH - buttonWidth) / 2, (SCREEN_HEIGHT - buttonHeight) / 2 - 200, buttonWidth, buttonHeight
+        (SCREEN_WIDTH - buttonWidth) / 2, (SCREEN_HEIGHT - buttonHeight) / 2 - buttonindent_2, buttonWidth, buttonHeight
     };
 
-    // Textos para o menu principal.
+    // Cria os textos para o menu principal.
     game->mainMenu.button[0].text = newText(game, "Start", 0, 0, BLACK);
     game->mainMenu.button[1].text = newText(game, "Exit", 0, 0, BLACK);
     if (!game->mainMenu.button[0].text.texture || !game->mainMenu.button[1].text.texture) {
@@ -116,10 +117,10 @@ static _Bool setupMainMenu(Game *game) {
         return DEU_MUITO_RUIM;
     }
     // Posiciona os textos no centro das texturas dos botões.
-    game->mainMenu.button[0].text.dst.x = (SCREEN_WIDTH - game->mainMenu.button[0].text.dst.w) / 2;
-    game->mainMenu.button[0].text.dst.y = (SCREEN_HEIGHT - game->mainMenu.button[0].text.dst.h) / 2 - 250;
-    game->mainMenu.button[1].text.dst.x = (SCREEN_WIDTH - game->mainMenu.button[1].text.dst.w) / 2;
-    game->mainMenu.button[1].text.dst.y = (SCREEN_HEIGHT - game->mainMenu.button[1].text.dst.h) / 2 - 200;
+    game->mainMenu.button[0].text.dst.x = (SCREEN_WIDTH  - game->mainMenu.button[0].text.dst.w) / 2;
+    game->mainMenu.button[0].text.dst.y = (SCREEN_HEIGHT - game->mainMenu.button[0].text.dst.h) / 2 - buttonIndent_1;
+    game->mainMenu.button[1].text.dst.x = (SCREEN_WIDTH  - game->mainMenu.button[1].text.dst.w) / 2;
+    game->mainMenu.button[1].text.dst.y = (SCREEN_HEIGHT - game->mainMenu.button[1].text.dst.h) / 2 - buttonindent_2;
 
     // Define o posicionamento da textura de fundo na tela.
     game->mainMenu.dst = (SDL_Rect) {
@@ -127,22 +128,24 @@ static _Bool setupMainMenu(Game *game) {
     };
 
     // Texto que mostra a versão do jogo no menu principal.
-    game->mainMenu.version = newText(game, "Version 1.0", 0, 0, BLACK);
+    game->mainMenu.version = newText(game, "Version 1.0", 0, 0, GREEN);
     if (!game->mainMenu.version.texture) {
         fprintf(stderr, "Falha ao criar texto da versão no menu principal.");
         return DEU_MUITO_RUIM;
     }
     // Define o posicionamente da textura no canto inferior.
-    game->mainMenu.version.dst.x = SCREEN_WIDTH - game->mainMenu.version.dst.w;
+    game->mainMenu.version.dst.x = SCREEN_WIDTH  - game->mainMenu.version.dst.w;
     game->mainMenu.version.dst.y = SCREEN_HEIGHT - game->mainMenu.version.dst.h;
     return true;
 }
 
+
+// Função responsável por configurar os objetos do jogo.
 _Bool setup(Game *game) {    
 	// Criação dos objetos do jogo.
-    setupInventory(game);
     setupPlayer(game);
-    if (!setupMainMenu(game) || !setupDungeon(game)) {
+    setupInventory(game);
+    if (!setupDungeon(game, "room_1") || !setupMainMenu(game)) {
         finish(game);
         return false;
     }

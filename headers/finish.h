@@ -1,9 +1,8 @@
 #ifndef FINISH_H
 #define FINISH_H
 
-// Função responsável por encerrar o jogo e liberar todos os recursos alocados.
-void finish(Game *game) {    
-    // Verifica se as texturas existem e as destroem, liberando memória.
+// Função que destrói as texturas do jogo.
+static void destroyTexture(Game *game) {
     if (game->mainMenu.texture) {
         SDL_DestroyTexture(game->mainMenu.texture);
         game->mainMenu.texture = NULL;
@@ -34,12 +33,21 @@ void finish(Game *game) {
         SDL_DestroyTexture(game->inventory.texture);
         game->inventory.texture = NULL;
     }
+}
 
-    // Destrói a fonte.
+// Função que destrói a fonte do jogo.
+static void destroyFont(Game *game) {
     if (game->font[0]) {
         TTF_CloseFont(game->font[0]);
         game->font[0] = NULL;
     }
+}
+
+// Função responsável por encerrar o jogo e liberar todos os recursos alocados.
+void finish(Game *game) {    
+    // Verifica se os objetos do jogo existem e os destroem, liberando memória.
+    destroyTexture(game);
+    destroyFont(game);
 
     // Destrói o renderizador e a janela, liberando memória.
     if (game->renderer) {

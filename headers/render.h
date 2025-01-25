@@ -8,7 +8,7 @@ static void renderMainMenu(Game *game) {
     // Renderiza os botões do menu principal.
     for (int i = 0; i < MAX_MAIN_MENU_BUTTONS; i++) {
         SDL_RenderCopy(game->renderer, game->mainMenu.texture, &game->mainMenu.button[i].src, &game->mainMenu.button[i].dst); 
-        SDL_RenderCopy(game->renderer, game->mainMenu.button[i].text.texture, NULL, &game->mainMenu.button[i].text.dst);  
+        SDL_RenderCopy(game->renderer, game->mainMenu.button[i].text.texture, NULL, &game->mainMenu.button[i].text.dst);
     }
     // Renderiza o texto com a versão do jogo.
     SDL_RenderCopy(game->renderer, game->mainMenu.version.texture, NULL, &game->mainMenu.version.dst);

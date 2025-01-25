@@ -3,14 +3,14 @@
 
 // Inicializar um array com as propriedades de cada tipo de bloco.
 static const BlockProperties blockProperties[] = {
-    [AIR] = {{0, 0, 0, 0}, false},
-    [WOOD] = {{0, 0, 16, 16}, false},
-    [WALL_1] = {{0, 16, 16, 16}, true},
-    [WALL_2] = {{0, 32, 16, 16}, true},
-    [DOOR_1] = {{0, 48, 16, 16}, true},
-    [DOOR_2] = {{16, 48, 16, 16}, true},
-    [DOOR_3] = {{0, 64, 16, 16}, true},
-    [DOOR_4] = {{16, 64, 16, 16}, true}
+    [AIR]    = {{ 0,  0,  0,  0}, false},
+    [WOOD]   = {{ 0,  0, 16, 16}, false},
+    [WALL_1] = {{ 0, 16, 16, 16}, true },
+    [WALL_2] = {{ 0, 32, 16, 16}, true },
+    [DOOR_1] = {{ 0, 48, 16, 16}, true },
+    [DOOR_2] = {{16, 48, 16, 16}, true },
+    [DOOR_3] = {{ 0, 64, 16, 16}, true },
+    [DOOR_4] = {{16, 64, 16, 16}, true }
 };
 
 // Define as propriedades de cada bloco.
@@ -25,8 +25,8 @@ void setBlockProperties(Game *game, const int i, const int j) {
     }
     
     // Define as propriedades do bloco de acordo com o tipo.
-    game->dungeon.block[i][j].type = blockType;
-    game->dungeon.block[i][j].properties.src = blockProperties[blockType].src;
+    game->dungeon.block[i][j].type               = blockType;
+    game->dungeon.block[i][j].properties.src     = blockProperties[blockType].src;
     game->dungeon.block[i][j].properties.isSolid = blockProperties[blockType].isSolid;
 }
 
@@ -74,11 +74,11 @@ Text newText(Game *game, const char *input, int x, int y, SDL_Color color) {
 _Bool isCursorInsideRect(const SDL_Point *cursorPosition, const SDL_Rect *dst) {
     if (cursorPosition->x >= dst->x && cursorPosition->x <= dst->x + dst->w) {
         if (cursorPosition->y >= dst->y && cursorPosition->y <= dst->y + dst->h) {
-            // Cursor está dentro.
+            // Cursor está dentro do retângulo.
             return true;
         }
     }
-    // Cursor está fora.
+    // Cursor está fora do retângulo.
     return false;
 }
 
@@ -91,7 +91,7 @@ _Bool checkCollisionWithBlock(Game *game) {
             if (game->dungeon.block[i][j].properties.isSolid) {
                 blockDst = game->dungeon.block[i][j].dst;
 
-                blockDst.x = i * BLOCK_WIDTH + game->camera.position.x;
+                blockDst.x = i * BLOCK_WIDTH  + game->camera.position.x;
                 blockDst.y = j * BLOCK_HEIGHT + game->camera.position.y;
 
                 // Se houver colisão, retorna verdadeiro.
