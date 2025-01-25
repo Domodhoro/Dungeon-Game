@@ -13,8 +13,8 @@ static const BlockProperties blockProperties[] = {
     [DOOR_4] = {{16, 64, 16, 16}, true}
 };
 
-// Define o tipo de bloco.
-void setBlockType(Game *game, const int i, const int j) {
+// Define as propriedades de cada bloco.
+void setBlockProperties(Game *game, const int i, const int j) {
     // Lê o tipo de bloco da tabela lua.
     int blockType = (int)lua_tonumber(game->L, -1);
     
@@ -70,13 +70,15 @@ Text newText(Game *game, const char *input, int x, int y, SDL_Color color) {
     return text;
 }
 
-// Função que verifica se o cursor do mouse está dentro da área dos botões do menu principal.
-_Bool checkCursorArea(const SDL_Point cursorPosition, const Button *button) {
-    if (cursorPosition.x >= button->dst.x && cursorPosition.x <= button->dst.x + button->dst.w) {
-        if (cursorPosition.y >= button->dst.y && cursorPosition.y <= button->dst.y + button->dst.h) {
+// Função que verifica se o cursor do mouse está dentro da área de um retângulo.
+_Bool isCursorInsideRect(const SDL_Point *cursorPosition, const SDL_Rect *dst) {
+    if (cursorPosition->x >= dst->x && cursorPosition->x <= dst->x + dst->w) {
+        if (cursorPosition->y >= dst->y && cursorPosition->y <= dst->y + dst->h) {
+            // Cursor está dentro.
             return true;
         }
     }
+    // Cursor está fora.
     return false;
 }
 

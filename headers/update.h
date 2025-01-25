@@ -7,7 +7,7 @@ void update(Game *game) {
     case MAIN_MENU:
         // Verifica qual dos botões do menu principal foi clicado.
         for (int i = 0; i < MAX_MAIN_MENU_BUTTONS; i++) {
-            if (checkCursorArea(game->mouse.position, &game->mainMenu.button[i])) {
+            if (isCursorInsideRect(&game->mouse.position, &game->mainMenu.button[i].dst)) {
                 game->mainMenu.button[i].src.y = 32;
                 if (game->mouse.leftButton) {
                     if (i == 0) {

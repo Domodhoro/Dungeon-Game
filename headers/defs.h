@@ -4,6 +4,11 @@
 // Somente para a fase de desenvolvimento.
 #define DEV true
 
+// Quando a esperança já foi totalmente perdida.
+#define FALHOU_MISERAVELMENTE -1
+// As vezes o erro é inevitável.
+#define DEU_MUITO_RUIM false
+
 // As vezes é necessário para o SDL.
 #define SDL_HANDLED_MAIN
 

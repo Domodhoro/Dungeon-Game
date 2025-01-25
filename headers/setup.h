@@ -8,7 +8,7 @@ static _Bool setupDungeon(Game *game) {
     if (!lua_istable(game->L, -1)) {
         fprintf(stderr, "Erro ao acessar a tabela 'dungeon': %s\n", lua_tostring(game->L, -1));
         lua_pop(game->L, 1);
-        return false;
+        return DEU_MUITO_RUIM;
     }
 
     // Acessa a sala específica usando o nome fornecido.
@@ -18,7 +18,7 @@ static _Bool setupDungeon(Game *game) {
         fprintf(stderr, "Erro ao acessar a sala '%s': %s\n", roomName, lua_tostring(game->L, -1));
          // Remove a tabela principal e o erro da pilha.
         lua_pop(game->L, 2);
-        return false;
+        return DEU_MUITO_RUIM;
     }
 
     // Preenche a masmorra com blocos a partir dos dados da tabela lua.
@@ -31,7 +31,7 @@ static _Bool setupDungeon(Game *game) {
             // Verifica se o valor é um número.
             if (lua_isnumber(game->L, -1)) {
                 // Define as propriedades de cada bloco.
-                setBlockType(game, i, j);
+                setBlockProperties(game, i, j);
             } else {
                 // Em caso de erro na leitura da tabela define o bloco como ar.
                 game->dungeon.block[i][j].type = AIR;
@@ -60,7 +60,7 @@ static _Bool setupDungeon(Game *game) {
 }
 
 // Função responsável por criar e configurar o jogador.
-static _Bool setupPlayer(Game *game) {
+static void setupPlayer(Game *game) {
     // Define o retângulo de origem da textura do jogador.
     game->player.src = (SDL_Rect) {
         0, 0, 32, 32
@@ -72,11 +72,10 @@ static _Bool setupPlayer(Game *game) {
 
     // Define a quantidade de pontos de vida do jogador.
     game->player.health = 3;
-    return true;
 }
 
 // Função responsável por criar e configurar o inventário do jogador.
-static _Bool setupInventory(Game *game) {
+static void setupInventory(Game *game) {
     for (int i = 0; i < INVENTORY_SIZE; i++) {
         game->inventory.src[i] = (SDL_Rect) {
             0, 0, 16, 16
@@ -87,7 +86,6 @@ static _Bool setupInventory(Game *game) {
         // Ajustando a posição.
         game->inventory.dst[i].y -= 10;
     }
-    return true;
 }
 
 // Função responsável por criar e configurar o menu principal do jogo.
@@ -115,7 +113,7 @@ static _Bool setupMainMenu(Game *game) {
     game->mainMenu.button[1].text = newText(game, "Exit", 0, 0, BLACK);
     if (!game->mainMenu.button[0].text.texture || !game->mainMenu.button[1].text.texture) {
         fprintf(stderr, "Falha ao criar texto para os botões no menu principal.");
-        return false;
+        return DEU_MUITO_RUIM;
     }
     // Posiciona os textos no centro das texturas dos botões.
     game->mainMenu.button[0].text.dst.x = (SCREEN_WIDTH - game->mainMenu.button[0].text.dst.w) / 2;
@@ -132,7 +130,7 @@ static _Bool setupMainMenu(Game *game) {
     game->mainMenu.version = newText(game, "Version 1.0", 0, 0, BLACK);
     if (!game->mainMenu.version.texture) {
         fprintf(stderr, "Falha ao criar texto da versão no menu principal.");
-        return false;
+        return DEU_MUITO_RUIM;
     }
     // Define o posicionamente da textura no canto inferior.
     game->mainMenu.version.dst.x = SCREEN_WIDTH - game->mainMenu.version.dst.w;
@@ -142,7 +140,9 @@ static _Bool setupMainMenu(Game *game) {
 
 _Bool setup(Game *game) {    
 	// Criação dos objetos do jogo.
-    if (!setupMainMenu(game) || !setupPlayer(game) || !setupDungeon(game) || !setupInventory(game)) {
+    setupInventory(game);
+    setupPlayer(game);
+    if (!setupMainMenu(game) || !setupDungeon(game)) {
         finish(game);
         return false;
     }

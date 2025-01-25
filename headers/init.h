@@ -6,20 +6,20 @@ static _Bool initSDL(Game *game) {
     // Inicializa a biblioteca para manipulação de vídeo.
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         fprintf(stderr, "Falha ao iniciar SDL: %s.\n", SDL_GetError());
-        return false;
+        return DEU_MUITO_RUIM;
     }
     // Inicializa a biblioteca para carregar imagens.
     if (IMG_Init(IMG_INIT_PNG) < 0) {
         fprintf(stderr, "Falha ao iniciar SDL_image: %s.\n", IMG_GetError());
         SDL_Quit();
-        return false;
+        return DEU_MUITO_RUIM;
     }
     // Inicializa a biblioteca para carregar fontes.
     if (TTF_Init() < 0) {
         fprintf(stderr, "Falha ao iniciar SDL_ttf: %s.\n", TTF_GetError());
         IMG_Quit();
         SDL_Quit();
-        return false;
+        return DEU_MUITO_RUIM;
     }
     // Abre e carregar a fonte ttf.
     game->font[0] = TTF_OpenFont("./fonts/04B_03__.TTF", FONT_SIZE);
@@ -27,7 +27,7 @@ static _Bool initSDL(Game *game) {
         fprintf(stderr, "Falha ao carregar a fonte: %s\n", TTF_GetError());
         IMG_Quit();
         SDL_Quit();
-        return false;
+        return DEU_MUITO_RUIM;
     }
     // Inicializa a biblioteca para manipulação de áudio.
     if (Mix_Init(MIX_INIT_MP3) < 0) {
@@ -35,7 +35,7 @@ static _Bool initSDL(Game *game) {
         TTF_Quit();
         IMG_Quit();
         SDL_Quit();
-        return false;
+        return DEU_MUITO_RUIM;
     }
     return true;
 }
@@ -51,7 +51,7 @@ static _Bool loadTexture(Game *game) {
     // Retorna falso em caso de erro.
     if (!game->dungeon.texture || !game->player.texture || !game->inventory.texture || !game->mainMenu.texture || !game->mainMenu.backgroundTexture) {
         fprintf(stderr, "Falha ao carregar texturas da masmorra: %s\n", IMG_GetError());
-        return false;
+        return DEU_MUITO_RUIM;
     }
     return true;
 }
@@ -62,19 +62,19 @@ _Bool init(Game *game) {
     game->L = luaL_newstate();
     if (!game->L) {
         fprintf(stderr, "Falha ao criar estado lua.\n");
-        return false;
+        return DEU_MUITO_RUIM;
     }
     // Abre as bibliotecas do lua.
     luaL_openlibs(game->L);
     // Abre/lê arquivo de script lua e caso ocorra erro, exibe uma mensagem.
     if (luaL_dofile(game->L, "./scripts/dungeon.lua") != LUA_OK) {
         fprintf(stderr, "Falha ao abrir/ler arquivo de script lua: %s\n", lua_tostring(game->L, -1));
-        return false;
+        return DEU_MUITO_RUIM;
     }
 
     // Inicializa o SDL.
     if (!initSDL(game)) {
-        return false;
+        return DEU_MUITO_RUIM;
     }
 
     // Cria a janela do jogo com o título e dimensões definidas e caso ocorra erro, exibe uma mensagem.
@@ -82,7 +82,7 @@ _Bool init(Game *game) {
     if (!game->window) {
         fprintf(stderr, "Falha ao criar janela de visualização: %s.\n", SDL_GetError());
         finish(game);
-        return false;
+        return DEU_MUITO_RUIM;
     }
 
     // Carrega a imagem do ícone da janela e caso ocorra erro ao carregar o ícone, exibe uma mensagem de erro.
@@ -90,7 +90,7 @@ _Bool init(Game *game) {
     if (!iconSurface) {
         fprintf(stderr, "Falha ao carregar o ícone: %s\n", IMG_GetError());
         finish(game);
-        return false;
+        return DEU_MUITO_RUIM;
     }
     SDL_SetWindowIcon(game->window, iconSurface);
     // Libera a superfície que foi usada para o ícone.
@@ -105,7 +105,7 @@ _Bool init(Game *game) {
         // Caso ocorra erro ao criar o renderizador, exibe a mensagem de erro.
         fprintf(stderr, "Falha ao criar o renderizador: %s.\n", SDL_GetError());
         finish(game);
-        return false;
+        return DEU_MUITO_RUIM;
     }
 
     // Define a cor de fundo.
@@ -119,7 +119,7 @@ _Bool init(Game *game) {
     // Carrega as textutas do jogo.
     if (!loadTexture(game)) {
         finish(game);
-        return false;
+        return DEU_MUITO_RUIM;
     }
 
     // Define a posição inicial da câmera.
