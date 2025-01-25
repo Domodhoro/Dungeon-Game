@@ -139,12 +139,20 @@ static _Bool setupMainMenu(Game *game) {
     return true;
 }
 
+// Função responsável por criar e configurar um foco de luz.
+static void setupLight(Game *game) {
+    game->light.dst = (SDL_Rect) {
+        (SCREEN_WIDTH - LIGHT_SIZE) / 2, (SCREEN_HEIGHT - LIGHT_SIZE) / 2, LIGHT_SIZE, LIGHT_SIZE
+    };
+    game->light.opacity = 96;
+}
 
 // Função responsável por configurar os objetos do jogo.
 _Bool setup(Game *game) {    
 	// Criação dos objetos do jogo.
     setupPlayer(game);
     setupInventory(game);
+    setupLight(game);
     if (!setupDungeon(game, "room_1") || !setupMainMenu(game)) {
         finish(game);
         return false;

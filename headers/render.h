@@ -7,7 +7,7 @@ static void renderMainMenu(Game *game) {
     SDL_RenderCopy(game->renderer, game->mainMenu.backgroundTexture, NULL, &game->mainMenu.dst);
     // Renderiza os botões do menu principal.
     for (int i = 0; i < MAX_MAIN_MENU_BUTTONS; i++) {
-        SDL_RenderCopy(game->renderer, game->mainMenu.texture, &game->mainMenu.button[i].src, &game->mainMenu.button[i].dst); 
+        SDL_RenderCopy(game->renderer, game->mainMenu.texture, &game->mainMenu.button[i].src, &game->mainMenu.button[i].dst);
         SDL_RenderCopy(game->renderer, game->mainMenu.button[i].text.texture, NULL, &game->mainMenu.button[i].text.dst);
     }
     // Renderiza o texto com a versão do jogo.
@@ -38,6 +38,18 @@ static void renderInventory(Game *game) {
     }
 }
 
+// Renderiza um foco de luz sobre o jogador.
+static void renderLight(Game *game) {
+    // Habilita o blending.
+    SDL_SetTextureBlendMode(game->light.texture, SDL_BLENDMODE_ADD);
+    // Ajustar a opacidade da textura de luz.
+    SDL_SetTextureAlphaMod(game->light.texture, game->light.opacity);
+    // Desenha um foco de luz no centro da tela.
+    SDL_RenderCopy(game->renderer, game->light.texture, NULL, &game->light.dst);
+    // Desabilita o blending.
+    SDL_SetTextureBlendMode(game->light.texture, SDL_BLENDMODE_BLEND);
+}
+
 // Função responsável por renderizar o conteúdo na tela.
 void render(Game *game) {
     // Define a cor de fundo da tela.
@@ -51,8 +63,9 @@ void render(Game *game) {
         break;
     case ACTIVE:
         renderDungeon(game);
-        renderInventory(game);
+        renderLight(game);
         renderPlayer(game);
+        renderInventory(game);
         break;
     }
     

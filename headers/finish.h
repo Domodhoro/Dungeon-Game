@@ -33,6 +33,10 @@ static void destroyTexture(Game *game) {
         SDL_DestroyTexture(game->inventory.texture);
         game->inventory.texture = NULL;
     }
+    if (game->light.texture) {
+        SDL_DestroyTexture(game->light.texture);
+        game->light.texture = NULL;
+    }
 }
 
 // Função que destrói a fonte do jogo.

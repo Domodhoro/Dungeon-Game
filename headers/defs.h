@@ -39,15 +39,16 @@
 
 // Define o tamanho do inventário.
 #define INVENTORY_SIZE 10
-
 // Define o tamanho da celula do inventário.
 #define INVENTORY_CELL_SIZE 48
 
 // Define o número máximo de fontes no jogo.
 #define MAX_FONTS 1
-
 // Define o tamanho da fonte.
 #define FONT_SIZE 24
+
+// Define o tamanho do foco de luz.
+#define LIGHT_SIZE 512
 
 // Define algumas constantes para cores.
 #define WHITE   (SDL_Color) {255, 255, 255}
