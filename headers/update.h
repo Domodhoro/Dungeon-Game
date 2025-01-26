@@ -61,9 +61,7 @@ void update(Game *game) {
 
         // Verifica colisão do jogador com os blocos da masmorra.
         if (checkCollisionWithBlock(game)) {
-            game->backgroundColor = GREEN;
-        } else {
-            game->backgroundColor = BLACK;
+            
         }
         break;
     case PAUSE:

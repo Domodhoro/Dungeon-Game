@@ -25,6 +25,10 @@ static void destroyTexture(Game *game) {
         SDL_DestroyTexture(game->player.texture);
         game->player.texture = NULL;
     }
+    if (game->player.hearts.texture) {
+        SDL_DestroyTexture(game->player.hearts.texture);
+        game->player.hearts.texture = NULL;
+    }
     if (game->dungeon.texture) {
         SDL_DestroyTexture(game->dungeon.texture);
         game->dungeon.texture = NULL;

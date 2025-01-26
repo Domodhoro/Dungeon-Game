@@ -26,6 +26,9 @@
 #define PLAYER_WIDTH  64
 #define PLAYER_HEIGHT 64
 
+// Define o tamanho dos corações do jogador.
+#define HEART_SIZE 48
+
 // Define o tamanho dos blocos.
 #define BLOCK_WIDTH  32
 #define BLOCK_HEIGHT 32
@@ -40,7 +43,7 @@
 // Define o tamanho do inventário.
 #define INVENTORY_SIZE 10
 // Define o tamanho da celula do inventário.
-#define INVENTORY_CELL_SIZE 48
+#define INVENTORY_CELL_SIZE 32
 
 // Define o número máximo de fontes no jogo.
 #define MAX_FONTS 1

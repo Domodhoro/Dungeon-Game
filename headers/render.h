@@ -17,6 +17,8 @@ static void renderMainMenu(Game *game) {
 // Renderiza o jogador.
 static void renderPlayer(Game *game) {
     SDL_RenderCopy(game->renderer, game->player.texture, &game->player.src, &game->player.dst);
+    // Renderiza os corações do jogador.
+    SDL_RenderCopy(game->renderer, game->player.hearts.texture, &game->player.hearts.src, &game->player.hearts.dst);
 }
 
 // Renderiza a masmorra.
@@ -42,8 +44,6 @@ static void renderInventory(Game *game) {
 static void renderLight(Game *game) {
     // Habilita o blending.
     SDL_SetTextureBlendMode(game->light.texture, SDL_BLENDMODE_ADD);
-    // Ajustar a opacidade da textura de luz.
-    SDL_SetTextureAlphaMod(game->light.texture, game->light.opacity);
     // Desenha um foco de luz no centro da tela.
     SDL_RenderCopy(game->renderer, game->light.texture, NULL, &game->light.dst);
     // Desabilita o blending.

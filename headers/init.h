@@ -46,13 +46,19 @@ static void initCamera(Game *game) {
 static _Bool loadTexture(Game *game) {
     game->dungeon.texture            = IMG_LoadTexture(game->renderer, "./sprites/dungeon.png");
     game->player.texture             = IMG_LoadTexture(game->renderer, "./sprites/player.png");
+    game->player.hearts.texture      = IMG_LoadTexture(game->renderer, "./sprites/heart.png");
     game->inventory.texture          = IMG_LoadTexture(game->renderer, "./sprites/inventory.png");
     game->mainMenu.texture           = IMG_LoadTexture(game->renderer, "./sprites/mainMenu.png");
     game->mainMenu.backgroundTexture = IMG_LoadTexture(game->renderer, "./sprites/mainMenuBackground.png");
     game->light.texture              = IMG_LoadTexture(game->renderer, "./sprites/light.png");
 
     // Retorna falso em caso de erro.
-    if (!game->dungeon.texture || !game->player.texture || !game->inventory.texture || !game->mainMenu.texture || !game->mainMenu.backgroundTexture) {
+    if (!game->dungeon.texture || !game->player.texture || !game->player.hearts.texture) {
+        fprintf(stderr, "Falha ao carregar texturas da masmorra: %s\n", IMG_GetError());
+        return DEU_MUITO_RUIM;
+    }
+    // Retorna falso em caso de erro.
+    if (!game->inventory.texture || !game->mainMenu.texture || !game->mainMenu.backgroundTexture) {
         fprintf(stderr, "Falha ao carregar texturas da masmorra: %s\n", IMG_GetError());
         return DEU_MUITO_RUIM;
     }

@@ -1,12 +1,18 @@
 #ifndef STRUCTS_H
 #define STRUCTS_H
 
-// Estrutura que representa um objeto do jogo.
-typedef struct Entity {
+// Estrutura que representa os pontos de vida do jogador.
+typedef struct Heart {
+    SDL_Texture *texture;
+    SDL_Rect src, dst;
+} Heart;
+
+// Estrutura que representa o jogador.
+typedef struct Player {
     SDL_Rect src, dst;
     SDL_Texture *texture;
-    short int health;
-} Entity;
+    Heart hearts;
+} Player;
 
 // Estrutura para armazenar as propriedades de cada tipo de bloco.
 typedef struct BlockProperties {
@@ -64,7 +70,6 @@ typedef struct Camera {
 typedef struct Light {
     SDL_Texture *texture;
     SDL_Rect dst;
-    Uint8 opacity;
 } Light;
 
 // Estrutura que armazena os estados do mouse.
@@ -107,7 +112,7 @@ typedef struct Game {
     Camera camera;
     Dungeon dungeon;
     MainMenu mainMenu;
-    Entity player;
+    Player player;
     Inventory inventory;
     Light light;
 } Game;

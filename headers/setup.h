@@ -41,10 +41,13 @@ static _Bool setupDungeon(Game *game, const char *roomName) {
 
             // COnfigura a posição dos blocos.
             game->dungeon.block[i][j].dst = (SDL_Rect) { 
-                i * BLOCK_WIDTH, j * BLOCK_HEIGHT, BLOCK_WIDTH, BLOCK_HEIGHT 
+                i * BLOCK_WIDTH, j * BLOCK_HEIGHT, BLOCK_WIDTH, BLOCK_HEIGHT
             };
         }
     }
+
+    // Ajustar a opacidade da textura da masmorra.
+    SDL_SetTextureAlphaMod(game->dungeon.texture, 128);
 
     // Lê o nível da masmorra.
     lua_getfield(game->L, -1, "level");
@@ -62,15 +65,19 @@ static _Bool setupDungeon(Game *game, const char *roomName) {
 static void setupPlayer(Game *game) {
     // Define o retângulo de origem da textura do jogador.
     game->player.src = (SDL_Rect) {
-        0, 0, 32, 32
+        0, 96, 32, 32
     };
     // Define a posição e o tamanho do jogador na tela.
     game->player.dst = (SDL_Rect) {
         (SCREEN_WIDTH - PLAYER_WIDTH) / 2, (SCREEN_HEIGHT - PLAYER_HEIGHT) / 2, PLAYER_WIDTH, PLAYER_HEIGHT
     };
-
-    // Define a quantidade de pontos de vida do jogador.
-    game->player.health = 3;
+    // Configura as coordenadas de textura e posição dos corações do jogador.
+    game->player.hearts.src = (SDL_Rect) {
+        0, 0, 32, 32
+    };
+    game->player.hearts.dst = (SDL_Rect) {
+        SCREEN_WIDTH - HEART_SIZE, 0, HEART_SIZE, HEART_SIZE
+    };
 }
 
 // Função responsável por criar e configurar o inventário do jogador.
@@ -144,7 +151,8 @@ static void setupLight(Game *game) {
     game->light.dst = (SDL_Rect) {
         (SCREEN_WIDTH - LIGHT_SIZE) / 2, (SCREEN_HEIGHT - LIGHT_SIZE) / 2, LIGHT_SIZE, LIGHT_SIZE
     };
-    game->light.opacity = 96;
+    // Ajustar a opacidade da textura de luz.
+    SDL_SetTextureAlphaMod(game->light.texture, 96);
 }
 
 // Função responsável por configurar os objetos do jogo.
