@@ -2,4 +2,4 @@
 
 Tentando criar um jogo de masmorra.
 
-![image](https://github.com/user-attachments/assets/cd7ecb84-c01b-4c75-8546-7a7940433a78)
+![image](https://github.com/user-attachments/assets/ab474b16-0a93-4f00-8b26-1dc0301551ae)
