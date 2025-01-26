@@ -1,5 +1,3 @@
-// https://www.slynyrd.com
-
 // Incluindo as bibliotecas e cabeçalhos necessários para o jogo.
 #include "./headers/dependencies.h"
 
