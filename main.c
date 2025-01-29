@@ -8,17 +8,17 @@ int main(int argc, char *argv[]) {
     if (!game) {
         fprintf(stderr, "Falha ao alocar mémoria para o jogo.\n");
         // Encerra o programa com falha.
-        return FALHOU_MISERAVELMENTE;
+        return -1;
     }
     // Zera a memória alocada para a estrutura principal.
     memset(game, 0, sizeof(Game));
 
-    // Inicializa o jogo e configura, se falhar, libera a memória e encerra o programa.
-    if (!init(game) || !setup(game)) {
+    // Inicializa o jogo, se falhar, libera a memória e encerra o programa.
+    if (!init(game)) {
         free(game);
         game = NULL;
         // Encerra o programa com falha.
-        return FALHOU_MISERAVELMENTE;
+        return -1;
     }
 
     // Inicia o jogo e entra na laço principal.
