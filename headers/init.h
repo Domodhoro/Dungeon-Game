@@ -117,7 +117,7 @@ _Bool init(Game *game) {
     // Posiciona o mouse no centro da janela.
     SDL_WarpMouseInWindow(game->window, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
 
-    // Criação da janela do jogo e do renderizador.
+    // Criação e configuração do renderizador.
     game->renderer = SDL_CreateRenderer(game->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (!game->renderer) {
         // Caso ocorra erro ao criar o renderizador, exibe a mensagem de erro.
