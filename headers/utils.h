@@ -61,7 +61,7 @@ void updatePlayerTexture(Game *game, const DIRECTION direction) {
 Text newText(Game *game, const char *input, int x, int y, SDL_Color color) {
     // Cria uma estrutura de texto.
     Text text;
-    SDL_Surface *textSurface = TTF_RenderText_Blended(game->font[0], input, color);
+    SDL_Surface *textSurface = TTF_RenderText_Blended(game->font, input, color);
     if (!textSurface) {
         printf("Erro ao criar superfície de texto: %s\n", TTF_GetError());
         return text;
@@ -110,6 +110,54 @@ _Bool checkCollisionWithBlock(Game *game) {
     }
     // Senão houver colisão, retorna falso.
     return false;
+}
+
+// Função que carrega as texturas do jogo e as adiciona a uma lista encadeada.
+void loadTexture(Game *game, const char *filePath, const char *name) {
+    // Cria um novo nó para a textura.
+    Texture *texture = malloc(sizeof(Texture));
+    if (!texture) {
+        // Verifica se a alocação de memória falhou.
+        fprintf(stderr, "Falha na alocação de memória para textura.\n");
+        return;
+    }
+    // Zera a memória alocada para garantir que todos os campos estejam limpos.
+    memset(texture, 0, sizeof(Texture));
+
+    // Carrega a textura com o caminho fornecido.
+    texture->texture = IMG_LoadTexture(game->renderer, filePath);
+    if (!texture->texture) {
+        // Caso a textura não tenha sido carregada com sucesso, libera a memória e retorna.
+        fprintf(stderr, "Falha ao carregar a textura: %s\n", IMG_GetError());
+        free(texture);
+        texture = NULL;
+        return;
+    }
+
+    // Define o nome da textura.
+    texture->name = name;
+    // Aponta para o primeiro nó da lista existente.
+    texture->next = game->texture;
+    // Atualiza a cabeça da lista para o novo nó.
+    game->texture = texture;
+}
+
+// Função que retorna a textura pelo nome fornecido.
+SDL_Texture *getTexture(Game *game, const char *name) {
+    // Percorre a lista encadeada de texturas.
+    Texture *current = game->texture;
+    while (current != NULL) {
+        // Compara o nome da textura com o nome buscado.
+        if (strcmp(current->name, name) == 0) {
+            // Retorna a textura se o nome coincidir.
+            return current->texture;
+        }
+        current = current->next;
+    }
+
+    // Se não encontrar a textura, retorna NULL.
+    fprintf(stderr, "Textura com o nome '%s' não encontrada.\n", name);
+    return NULL;
 }
 
 #endif //  UTILS_H

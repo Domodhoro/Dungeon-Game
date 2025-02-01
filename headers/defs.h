@@ -9,9 +9,9 @@
 #define SCREEN_WIDTH  1024
 #define SCREEN_HEIGHT 768
 
-// Define a quantidade de quadros por segundo (FPS) desejada.
-#define FPS 60
-// Este valor é usado para controlar a taxa de atualização do jogo.
+// Define a taxa de quadros por segundo (FPS) desejada.
+#define FPS 80
+// Esta constante é usado para controlar a taxa de atualização do jogo.
 #define FRAME_TIME (1000 / FPS)
 
 // Define o tamanho do jogador.
@@ -36,11 +36,6 @@
 #define INVENTORY_SIZE 10
 // Define o tamanho da celula do inventário.
 #define INVENTORY_CELL_SIZE 32
-
-// Define o número máximo de fontes no jogo.
-#define MAX_FONTS 1
-// Define o tamanho da fonte.
-#define FONT_SIZE 24
 
 // Define o tamanho do foco de luz do jogador.
 #define LIGHT_SIZE 512

@@ -13,6 +13,17 @@ static void setupCamera(Game *game) {
 
 // Função responsável por criar e configurar uma masmorra.
 static _Bool setupDungeon(Game *game, const char *roomName) {
+    /*
+    // Cria uma instância da masmorra.
+    game->dungeon = malloc(sizeof(Dungeon));
+    if (!game->dungeon) {
+        fprintf(stderr, "Falha ao alocar mémoria para a masmorra.\n");
+        return false;
+    }
+    // Zera a memória alocada para a estrutura da masmorra.
+    memset(game->dungeon, 0, sizeof(Dungeon));
+    */
+
     // Acessa a tabela principal.
     lua_getglobal(game->L, "dungeon");
     if (!lua_istable(game->L, -1)) {
@@ -153,22 +164,12 @@ static _Bool setupMainMenu(Game *game) {
     return true;
 }
 
-// Função responsável por criar e configurar um foco de luz.
-static void setupLight(Game *game) {
-    game->light.dst = (SDL_Rect) {
-        (SCREEN_WIDTH - LIGHT_SIZE) / 2, (SCREEN_HEIGHT - LIGHT_SIZE) / 2, LIGHT_SIZE, LIGHT_SIZE
-    };
-    // Ajustar a opacidade da textura de luz.
-    SDL_SetTextureAlphaMod(game->light.texture, 64);
-}
-
 // Função responsável por configurar os objetos do jogo.
 _Bool setup(Game *game) {    
     // Configura os objetos do jogo.
     setupCamera(game);
     setupPlayer(game);
     setupInventory(game);
-    setupLight(game);
     if (!setupDungeon(game, "room_1") || !setupMainMenu(game)) {
         finish(game);
         return false;

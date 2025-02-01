@@ -19,7 +19,7 @@ static _Bool initLua(Game *game) {
 }
 
 // Função responsável por iniciar as bibliotecas SDL.
-static _Bool initSDL(Game *game) {
+static _Bool initSDL() {
     // Inicializa a biblioteca para manipulação de vídeo.
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         fprintf(stderr, "Falha ao iniciar SDL: %s.\n", SDL_GetError());
@@ -49,34 +49,13 @@ static _Bool initSDL(Game *game) {
     return true;
 }
 
-// Função que carrega as texturas do jogo.
-static _Bool loadTextures(Game *game) {
-    game->dungeon.texture            = IMG_LoadTexture(game->renderer, "./assets/sprites/dungeon.png");
-    game->player.texture             = IMG_LoadTexture(game->renderer, "./assets/sprites/player.png");
-    game->player.hearts.texture      = IMG_LoadTexture(game->renderer, "./assets/sprites/heart.png");
-    game->inventory.texture          = IMG_LoadTexture(game->renderer, "./assets/sprites/inventory.png");
-    game->mainMenu.texture           = IMG_LoadTexture(game->renderer, "./assets/sprites/mainMenu.png");
-    game->mainMenu.backgroundTexture = IMG_LoadTexture(game->renderer, "./assets/sprites/mainMenuBackground.png");
-    game->light.texture              = IMG_LoadTexture(game->renderer, "./assets/sprites/light.png");
-
-    // Retorna falso em caso de erro.
-    if (!game->dungeon.texture || !game->player.texture || !game->player.hearts.texture) {
-        fprintf(stderr, "Falha ao carregar texturas da masmorra: %s\n", IMG_GetError());
-        return false;
-    }
-    // Retorna falso em caso de erro.
-    if (!game->inventory.texture || !game->mainMenu.texture || !game->mainMenu.backgroundTexture) {
-        fprintf(stderr, "Falha ao carregar texturas da masmorra: %s\n", IMG_GetError());
-        return false;
-    }
-    return true;
-}
-
 // Função que carrega a fonte de texto.
 static _Bool loadFonts(Game *game) {
+    // Define o tamanho da fonte.
+    const int fontSize = 24;
     // Abre e carregar a fonte ttf.
-    game->font[0] = TTF_OpenFont("./assets/fonts/04B_03__.TTF", FONT_SIZE);
-    if (!game->font[0]) {
+    game->font = TTF_OpenFont("./assets/fonts/04B_03__.TTF", fontSize);
+    if (!game->font) {
         fprintf(stderr, "Falha ao carregar a fonte: %s\n", TTF_GetError());
         return false;
     }
@@ -91,7 +70,7 @@ _Bool init(Game *game) {
     }
 
     // Inicializa o SDL.
-    if (!initSDL(game)) {
+    if (!initSDL()) {
         return false;
     }
 
@@ -126,19 +105,24 @@ _Bool init(Game *game) {
         return false;
     }
 
-    // Habilita o blending no renderizador.
-    SDL_SetRenderDrawBlendMode(game->renderer, SDL_BLENDMODE_BLEND);
-
     // Define a cor de fundo.
-    game->backgroundColor = BLACK;
+    game->backgroundColor = WHITE;
 
     // Define as dimensões da janela de visualização do renderizador.
     game->viewport = (SDL_Rect) {
         0, 0, SCREEN_WIDTH, SCREEN_HEIGHT
     };
 
-    // Carrega as textutas e a fonte do jogo.
-    if (!loadTextures(game) || !loadFonts(game)) {
+    // Carrega as textutas.
+    loadTexture(game, "./assets/sprites/dungeon.png", "DUNGEON_TEXTURE");
+    loadTexture(game, "./assets/sprites/player.png", "PLAYER_TEXTURE");
+    loadTexture(game, "./assets/sprites/heart.png", "HEART_TEXTURE");
+    loadTexture(game, "./assets/sprites/inventory.png", "INVENTORY_TEXTURE");
+    loadTexture(game, "./assets/sprites/mainMenu.png", "MAIN_MENU_TEXTURE");
+    loadTexture(game, "./assets/sprites/mainMenuBackground.png", "MAIN_MENU_BACKGROUND_TEXTURE");
+
+    // Carrega a fonte do jogo.
+    if (!loadFonts(game)) {
         finish(game);
         return false;
     }

@@ -3,6 +3,11 @@
 
 // Função responsável por atualizar o estado do jogo.
 void update(Game *game) {
+    DIRECTION direction = NONE;
+
+    // Armazena a posição da câmera antes do movimento.
+    SDL_Point cameraPrev = game->camera.position;
+
     switch (game->state) {
     case MAIN_MENU:
         // Verifica qual dos botões do menu principal foi clicado.
@@ -22,11 +27,6 @@ void update(Game *game) {
         }
         break;
     case ACTIVE:
-        DIRECTION direction = NONE;
-
-        // Armazena a posição da câmera antes do movimento.
-        SDL_Point cameraPrev = game->camera.position;
-
         // Move a câmera para cima.
         if (game->userInputs.keyboard.states[SDL_SCANCODE_W]) {
             direction = UP;
@@ -61,9 +61,7 @@ void update(Game *game) {
 
         // Verifica colisão do jogador com os blocos da masmorra.
         if (checkCollisionWithBlock(game)) {
-            game->backgroundColor = GREEN;
-        } else {
-            game->backgroundColor = BLACK;
+            game->camera.position = cameraPrev;   
         }
         break;
     case PAUSE:

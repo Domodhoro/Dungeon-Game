@@ -24,34 +24,31 @@ typedef struct Block {
 // Estrututa que representa uma masmorra.
 typedef struct Dungeon {
     Block block[DUNGEON_WIDTH][DUNGEON_HEIGHT];
-    SDL_Texture *texture;
     int level;
 } Dungeon;
 
 // Estrutura que representa os pontos de vida do jogador.
 typedef struct Heart {
-    SDL_Texture *texture;
     SDL_Rect src, dst;
 } Heart;
 
 // Estrutura que representa o jogador.
 typedef struct Player {
     SDL_Rect src, dst;
-    SDL_Texture *texture;
     Heart hearts;
 } Player;
-
-// Estrutura que representa um foco de luz.
-typedef struct Light {
-    SDL_Texture *texture;
-    SDL_Rect dst;
-} Light;
 
 // Estrututa que representa o inventário do jogador.
 typedef struct Inventory {
     SDL_Rect src[INVENTORY_SIZE], dst[INVENTORY_SIZE];
-    SDL_Texture *texture;
 } Inventory;
+
+// Estrutura para as texturas.
+typedef struct Texture {
+    SDL_Texture *texture;
+    const char *name;
+    struct Texture *next;
+} Texture;
 
 // Estrutura para texto.
 typedef struct Text {
@@ -68,7 +65,6 @@ typedef struct Button {
 // Estrutura para o menu principal do jogo.
 typedef struct MainMenu {
     Button button[MAX_MAIN_MENU_BUTTONS];
-    SDL_Texture *texture, *backgroundTexture;
     SDL_Rect dst;
     Text version;
 } MainMenu;
@@ -107,7 +103,9 @@ typedef struct Game {
     _Bool running;
     Uint32 frameStart, frameTime;
 
-    TTF_Font *font[MAX_FONTS];
+    Texture *texture;
+
+    TTF_Font *font;
 
     UserInputs userInputs;
     Camera camera;
@@ -115,7 +113,6 @@ typedef struct Game {
     MainMenu mainMenu;
     Player player;
     Inventory inventory;
-    Light light;
 } Game;
 
 #endif // STRUCTS_H

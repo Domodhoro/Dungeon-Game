@@ -3,51 +3,39 @@
 
 // Função que destrói as texturas do jogo.
 static void destroyTextures(Game *game) {
-    if (game->mainMenu.texture) {
-        SDL_DestroyTexture(game->mainMenu.texture);
-        game->mainMenu.texture = NULL;
+    Texture *current = game->texture;
+    Texture *next = NULL;
+
+    // Percorre toda a lista de texturas e destrói cada uma.
+    while (current != NULL) {
+        // Salva o próximo nó.
+        next = current->next;
+
+        // Destrói a textura atual.
+        if (current->texture != NULL) {
+            SDL_DestroyTexture(current->texture);
+        }
+
+        // Libera a memória associada à estrutura Texture.
+        free(current);
+
+        // Avança para o próximo nó.
+        current = next;
     }
-    if (game->mainMenu.backgroundTexture) {
-        SDL_DestroyTexture(game->mainMenu.backgroundTexture);
-        game->mainMenu.backgroundTexture = NULL;
-    }
+
     for (int i = 0; i < 2; i++) {
         if (game->mainMenu.button[i].text.texture) {
             SDL_DestroyTexture(game->mainMenu.button[i].text.texture);
             game->mainMenu.button[i].text.texture = NULL;
         }
     }
-    if (game->mainMenu.version.texture) {
-        SDL_DestroyTexture(game->mainMenu.version.texture);
-        game->mainMenu.version.texture = NULL;
-    }
-    if (game->player.texture) {
-        SDL_DestroyTexture(game->player.texture);
-        game->player.texture = NULL;
-    }
-    if (game->player.hearts.texture) {
-        SDL_DestroyTexture(game->player.hearts.texture);
-        game->player.hearts.texture = NULL;
-    }
-    if (game->dungeon.texture) {
-        SDL_DestroyTexture(game->dungeon.texture);
-        game->dungeon.texture = NULL;
-    }
-    if (game->inventory.texture) {
-        SDL_DestroyTexture(game->inventory.texture);
-        game->inventory.texture = NULL;
-    }
-    if (game->light.texture) {
-        SDL_DestroyTexture(game->light.texture);
-        game->light.texture = NULL;
-    }
 }
 
 // Função que destrói a fonte do jogo.
 static void destroyFonts(Game *game) {
-    if (game->font[0]) {
-        TTF_CloseFont(game->font[0]);
-        game->font[0] = NULL;
+    if (game->font) {
+        TTF_CloseFont(game->font);
+        game->font = NULL;
     }
 }
 
@@ -56,6 +44,14 @@ void finish(Game *game) {
     // Verifica se os objetos do jogo existem e os destroem, liberando memória.
     destroyTextures(game);
     destroyFonts(game);
+
+    /*
+    // Destrói a masmorra, liberando memória.
+    if (game->dungeon) {
+        free(game->dungeon);
+        game->dungeon = NULL;
+    }
+    */
 
     // Destrói o renderizador e a janela, liberando memória.
     if (game->renderer) {
@@ -75,7 +71,6 @@ void finish(Game *game) {
 
     // Fecha o estado lua.
     lua_close(game->L);
-    game->L = NULL;
 }
 
 #endif // FINISH_H
