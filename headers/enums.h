@@ -3,14 +3,14 @@
 
 // Estados do programa.
 typedef enum GAME_STATE {
-	MAIN_MENU = 0,
+	MAIN_MENU = -1,
 	ACTIVE,
 	PAUSE
 } GAME_STATE;
 
 // Define as direções do jogador.
 typedef enum DIRECTION {
-	NONE = 0,
+	NONE = -1,
 	UP,
 	LEFT,
 	DOWN,
@@ -36,5 +36,20 @@ typedef enum BLOCK_TYPE {
     WALL_12 = 14,
     WALL_13 = 15
 } BLOCK_TYPE;
+
+// Define os nomes das texturas usadas no jogo.
+typedef enum TEXTURE_ID {
+    DUNGEON_TEXTURE = 0,
+    PLAYER_TEXTURE,
+    HEART_TEXTURE,
+    INVENTORY_TEXTURE,
+    MAIN_MENU_TEXTURE,
+    MAIN_MENU_BACKGROUND_TEXTURE
+} TEXTURE_ID;
+
+// Define os nomes das fontes usadas no jogo.
+typedef enum FONT_ID {
+    FONT_1    
+} FONT_ID;
 
 #endif // ENUMS_H

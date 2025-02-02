@@ -103,16 +103,16 @@ typedef struct Game {
     _Bool running;
     Uint32 frameStart, frameTime;
 
-    Texture *texture;
-
-    TTF_Font *font;
+    SDL_Texture *textures[MAX_TEXTURES];
+    TTF_Font *font[MAX_FONTS];
 
     UserInputs userInputs;
     Camera camera;
-    Dungeon dungeon;
     MainMenu mainMenu;
     Player player;
     Inventory inventory;
+
+    Dungeon *dungeon;
 } Game;
 
 #endif // STRUCTS_H

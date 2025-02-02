@@ -33,10 +33,10 @@ void setBlockProperties(Game *game, const int i, const int j) {
     }
     
     // Define as propriedades do bloco de acordo com o tipo.
-    game->dungeon.block[i][j].type                    = blockType;
-    game->dungeon.block[i][j].properties.src          = blockProperties[blockType].src;
-    game->dungeon.block[i][j].properties.isSolid      = blockProperties[blockType].isSolid;
-    game->dungeon.block[i][j].properties.isBackground = blockProperties[blockType].isBackground;
+    game->dungeon->block[i][j].type                    = blockType;
+    game->dungeon->block[i][j].properties.src          = blockProperties[blockType].src;
+    game->dungeon->block[i][j].properties.isSolid      = blockProperties[blockType].isSolid;
+    game->dungeon->block[i][j].properties.isBackground = blockProperties[blockType].isBackground;
 }
 
 // Atualiza a textura do jogador com base na direção.
@@ -61,7 +61,7 @@ void updatePlayerTexture(Game *game, const DIRECTION direction) {
 Text newText(Game *game, const char *input, int x, int y, SDL_Color color) {
     // Cria uma estrutura de texto.
     Text text;
-    SDL_Surface *textSurface = TTF_RenderText_Blended(game->font, input, color);
+    SDL_Surface *textSurface = TTF_RenderText_Blended(game->font[0], input, color);
     if (!textSurface) {
         printf("Erro ao criar superfície de texto: %s\n", TTF_GetError());
         return text;
@@ -95,8 +95,8 @@ _Bool checkCollisionWithBlock(Game *game) {
     // Laço que percorre todos os blocos da masmorra.
     for (int i = 0; i < DUNGEON_WIDTH; i++) {
         for (int j = 0; j < DUNGEON_HEIGHT; j++) {
-            if (game->dungeon.block[i][j].properties.isSolid) {
-                blockDst = game->dungeon.block[i][j].dst;
+            if (game->dungeon->block[i][j].properties.isSolid) {
+                blockDst = game->dungeon->block[i][j].dst;
 
                 blockDst.x = i * BLOCK_WIDTH  + game->camera.position.x;
                 blockDst.y = j * BLOCK_HEIGHT + game->camera.position.y;
@@ -112,52 +112,24 @@ _Bool checkCollisionWithBlock(Game *game) {
     return false;
 }
 
-// Função que carrega as texturas do jogo e as adiciona a uma lista encadeada.
-void loadTexture(Game *game, const char *filePath, const char *name) {
-    // Cria um novo nó para a textura.
-    Texture *texture = malloc(sizeof(Texture));
-    if (!texture) {
-        // Verifica se a alocação de memória falhou.
-        fprintf(stderr, "Falha na alocação de memória para textura.\n");
-        return;
+// Função responsável por carregar as texturas do jogo.
+_Bool loadTexture(Game *game, const char *filePath, const TEXTURE_ID ID) {
+    game->textures[ID] = IMG_LoadTexture(game->renderer, filePath);
+    if (!game->textures[ID]) {
+        fprintf(stderr, "Falha ao carregar textura: %s\n", IMG_GetError());
+        return false;
     }
-    // Zera a memória alocada para garantir que todos os campos estejam limpos.
-    memset(texture, 0, sizeof(Texture));
-
-    // Carrega a textura com o caminho fornecido.
-    texture->texture = IMG_LoadTexture(game->renderer, filePath);
-    if (!texture->texture) {
-        // Caso a textura não tenha sido carregada com sucesso, libera a memória e retorna.
-        fprintf(stderr, "Falha ao carregar a textura: %s\n", IMG_GetError());
-        free(texture);
-        texture = NULL;
-        return;
-    }
-
-    // Define o nome da textura.
-    texture->name = name;
-    // Aponta para o primeiro nó da lista existente.
-    texture->next = game->texture;
-    // Atualiza a cabeça da lista para o novo nó.
-    game->texture = texture;
+    return true;
 }
 
-// Função que retorna a textura pelo nome fornecido.
-SDL_Texture *getTexture(Game *game, const char *name) {
-    // Percorre a lista encadeada de texturas.
-    Texture *current = game->texture;
-    while (current != NULL) {
-        // Compara o nome da textura com o nome buscado.
-        if (strcmp(current->name, name) == 0) {
-            // Retorna a textura se o nome coincidir.
-            return current->texture;
-        }
-        current = current->next;
+// Função que carrega a fonte de texto.
+_Bool loadFont(Game *game, const char *filePath, const FONT_ID ID, const int fontSize) {
+    game->font[ID] = TTF_OpenFont(filePath, fontSize);
+    if (!game->font[ID]) {
+        fprintf(stderr, "Falha ao carregar a fonte: %s\n", TTF_GetError());
+        return false;
     }
-
-    // Se não encontrar a textura, retorna NULL.
-    fprintf(stderr, "Textura com o nome '%s' não encontrada.\n", name);
-    return NULL;
+    return true;
 }
 
 #endif //  UTILS_H

@@ -13,7 +13,6 @@ static void setupCamera(Game *game) {
 
 // Função responsável por criar e configurar uma masmorra.
 static _Bool setupDungeon(Game *game, const char *roomName) {
-    /*
     // Cria uma instância da masmorra.
     game->dungeon = malloc(sizeof(Dungeon));
     if (!game->dungeon) {
@@ -22,7 +21,6 @@ static _Bool setupDungeon(Game *game, const char *roomName) {
     }
     // Zera a memória alocada para a estrutura da masmorra.
     memset(game->dungeon, 0, sizeof(Dungeon));
-    */
 
     // Acessa a tabela principal.
     lua_getglobal(game->L, "dungeon");
@@ -54,14 +52,14 @@ static _Bool setupDungeon(Game *game, const char *roomName) {
                 setBlockProperties(game, i, j);
             } else {
                 // Em caso de erro na leitura da tabela define o bloco como ar.
-                game->dungeon.block[i][j].type = AIR;
-                game->dungeon.block[i][j].properties.isSolid = false;
+                game->dungeon->block[i][j].type = AIR;
+                game->dungeon->block[i][j].properties.isSolid = false;
             }
             // Remove o valor da pilha.
             lua_pop(game->L, 1);
 
             // COnfigura a posição dos blocos.
-            game->dungeon.block[i][j].dst = (SDL_Rect) { 
+            game->dungeon->block[i][j].dst = (SDL_Rect) { 
                 i * BLOCK_WIDTH, j * BLOCK_HEIGHT, BLOCK_WIDTH, BLOCK_HEIGHT
             };
         }
@@ -70,9 +68,9 @@ static _Bool setupDungeon(Game *game, const char *roomName) {
     // Lê o nível da masmorra.
     lua_getfield(game->L, -1, "level");
     if (lua_isnumber(game->L, -1)) {
-        game->dungeon.level = (int)lua_tonumber(game->L, -1);
+        game->dungeon->level = (int)lua_tonumber(game->L, -1);
     } else {
-        game->dungeon.level = 1;
+        game->dungeon->level = 1;
     }
     // Remove a referência à sala.
     lua_pop(game->L, 1);

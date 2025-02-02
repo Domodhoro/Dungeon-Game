@@ -49,14 +49,23 @@ static _Bool initSDL() {
     return true;
 }
 
-// Função que carrega a fonte de texto.
-static _Bool loadFonts(Game *game) {
-    // Define o tamanho da fonte.
-    const int fontSize = 24;
-    // Abre e carregar a fonte ttf.
-    game->font = TTF_OpenFont("./assets/fonts/04B_03__.TTF", fontSize);
-    if (!game->font) {
-        fprintf(stderr, "Falha ao carregar a fonte: %s\n", TTF_GetError());
+static _Bool loadTextures(Game *game) {
+    if (!loadTexture(game, "./assets/sprites/dungeon.png", DUNGEON_TEXTURE)) {
+        return false;
+    }
+    if (!loadTexture(game, "./assets/sprites/player.png", PLAYER_TEXTURE)) {
+        return false;
+    }
+    if (!loadTexture(game, "./assets/sprites/heart.png", HEART_TEXTURE)) {
+        return false;
+    }
+    if (!loadTexture(game, "./assets/sprites/inventory.png", INVENTORY_TEXTURE)) {
+        return false;
+    }
+    if (!loadTexture(game, "./assets/sprites/mainMenu.png", MAIN_MENU_TEXTURE)) {
+        return false;
+    }
+    if (!loadTexture(game, "./assets/sprites/mainMenuBackground.png", MAIN_MENU_BACKGROUND_TEXTURE)) {
         return false;
     }
     return true;
@@ -113,16 +122,8 @@ _Bool init(Game *game) {
         0, 0, SCREEN_WIDTH, SCREEN_HEIGHT
     };
 
-    // Carrega as textutas.
-    loadTexture(game, "./assets/sprites/dungeon.png", "DUNGEON_TEXTURE");
-    loadTexture(game, "./assets/sprites/player.png", "PLAYER_TEXTURE");
-    loadTexture(game, "./assets/sprites/heart.png", "HEART_TEXTURE");
-    loadTexture(game, "./assets/sprites/inventory.png", "INVENTORY_TEXTURE");
-    loadTexture(game, "./assets/sprites/mainMenu.png", "MAIN_MENU_TEXTURE");
-    loadTexture(game, "./assets/sprites/mainMenuBackground.png", "MAIN_MENU_BACKGROUND_TEXTURE");
-
-    // Carrega a fonte do jogo.
-    if (!loadFonts(game)) {
+    // Carrega as textutas e a fonte do jogo.
+    if (!loadTextures(game) || !loadFont(game, "./assets/fonts/04B_03__.TTF", FONT_1, 24)) {
         finish(game);
         return false;
     }

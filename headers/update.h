@@ -54,14 +54,14 @@ void update(Game *game) {
         // Atualiza a posição dos blocos somente se não houver colisão.
         for (int i = 0; i < DUNGEON_WIDTH; i++) {
             for (int j = 0; j < DUNGEON_HEIGHT; j++) {
-                game->dungeon.block[i][j].dst.x = i * BLOCK_WIDTH + game->camera.position.x;
-                game->dungeon.block[i][j].dst.y = j * BLOCK_HEIGHT + game->camera.position.y;
+                game->dungeon->block[i][j].dst.x = i * BLOCK_WIDTH + game->camera.position.x;
+                game->dungeon->block[i][j].dst.y = j * BLOCK_HEIGHT + game->camera.position.y;
             }
         }
 
         // Verifica colisão do jogador com os blocos da masmorra.
         if (checkCollisionWithBlock(game)) {
-            game->camera.position = cameraPrev;   
+            game->camera.position = cameraPrev;
         }
         break;
     case PAUSE:

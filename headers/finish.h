@@ -3,39 +3,21 @@
 
 // Função que destrói as texturas do jogo.
 static void destroyTextures(Game *game) {
-    Texture *current = game->texture;
-    Texture *next = NULL;
-
-    // Percorre toda a lista de texturas e destrói cada uma.
-    while (current != NULL) {
-        // Salva o próximo nó.
-        next = current->next;
-
-        // Destrói a textura atual.
-        if (current->texture != NULL) {
-            SDL_DestroyTexture(current->texture);
-        }
-
-        // Libera a memória associada à estrutura Texture.
-        free(current);
-
-        // Avança para o próximo nó.
-        current = next;
-    }
-
-    for (int i = 0; i < 2; i++) {
-        if (game->mainMenu.button[i].text.texture) {
-            SDL_DestroyTexture(game->mainMenu.button[i].text.texture);
-            game->mainMenu.button[i].text.texture = NULL;
+    for (int i = 0; i < MAX_TEXTURES; i++) {
+        if (game->textures[i]) {
+            SDL_DestroyTexture(game->textures[i]);
+            game->textures[i] = NULL;
         }
     }
 }
 
 // Função que destrói a fonte do jogo.
 static void destroyFonts(Game *game) {
-    if (game->font) {
-        TTF_CloseFont(game->font);
-        game->font = NULL;
+    for (int i = 0; i < MAX_FONTS; i++) {
+        if (game->font[i]) {
+            TTF_CloseFont(game->font[i]);
+            game->font[i] = NULL;
+        }
     }
 }
 
@@ -45,13 +27,11 @@ void finish(Game *game) {
     destroyTextures(game);
     destroyFonts(game);
 
-    /*
     // Destrói a masmorra, liberando memória.
     if (game->dungeon) {
         free(game->dungeon);
         game->dungeon = NULL;
     }
-    */
 
     // Destrói o renderizador e a janela, liberando memória.
     if (game->renderer) {
