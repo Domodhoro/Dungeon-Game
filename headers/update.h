@@ -59,8 +59,8 @@ void update(Game *game) {
             // Atualiza a posição dos blocos somente se não houver colisão.
             for (int i = 0; i < ROOM_WIDTH; i++) {
                 for (int j = 0; j < ROOM_HEIGHT; j++) {
-                    game->dungeon->room->block[i][j].dst.x = i * BLOCK_WIDTH + game->camera.position.x;
-                    game->dungeon->room->block[i][j].dst.y = j * BLOCK_HEIGHT + game->camera.position.y;
+                    currentRoom->block[i][j].dst.x = i * BLOCK_WIDTH + game->camera.position.x;
+                    currentRoom->block[i][j].dst.y = j * BLOCK_HEIGHT + game->camera.position.y;
                 }
             }   
 
