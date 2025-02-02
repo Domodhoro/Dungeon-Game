@@ -39,11 +39,6 @@ static void handleMouseButtonsUp(Game *game) {
     }
 }
 
-// Função para tratar a linha de comando.
-void handleCommandLine(int argc, char *argv[]) {
-
-}
-
 // Função que trata os eventos.
 void handleEvents(Game *game) {
     // Verifica se há eventos na fila de eventos do SDL.

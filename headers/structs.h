@@ -21,10 +21,16 @@ typedef struct Block {
     BLOCK_TYPE type;
 } Block;
 
-// Estrututa que representa uma masmorra.
-typedef struct Dungeon {
-    Block block[DUNGEON_WIDTH][DUNGEON_HEIGHT];
+// Estrututa que representa uma sala da masmorra.
+typedef struct Room {
+    Block block[ROOM_WIDTH][ROOM_HEIGHT];
     int level;
+    struct Room *next;
+} Room;
+
+// Estrutura que representa uma masmorra.
+typedef struct Dungeon {
+    Room *room;
 } Dungeon;
 
 // Estrutura que representa os pontos de vida do jogador.
@@ -42,13 +48,6 @@ typedef struct Player {
 typedef struct Inventory {
     SDL_Rect src[INVENTORY_SIZE], dst[INVENTORY_SIZE];
 } Inventory;
-
-// Estrutura para as texturas.
-typedef struct Texture {
-    SDL_Texture *texture;
-    const char *name;
-    struct Texture *next;
-} Texture;
 
 // Estrutura para texto.
 typedef struct Text {

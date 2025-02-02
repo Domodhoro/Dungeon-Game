@@ -51,12 +51,21 @@ void update(Game *game) {
         // Atualiza a textura do jogador.
         updatePlayerTexture(game, direction);
 
-        // Atualiza a posição dos blocos somente se não houver colisão.
-        for (int i = 0; i < DUNGEON_WIDTH; i++) {
-            for (int j = 0; j < DUNGEON_HEIGHT; j++) {
-                game->dungeon->block[i][j].dst.x = i * BLOCK_WIDTH + game->camera.position.x;
-                game->dungeon->block[i][j].dst.y = j * BLOCK_HEIGHT + game->camera.position.y;
-            }
+        // Começa pela primeira sala da masmorra.
+        Room *currentRoom = game->dungeon->room;
+
+        // Enquanto houver uma sala na lista.
+        while (currentRoom != NULL) {
+            // Atualiza a posição dos blocos somente se não houver colisão.
+            for (int i = 0; i < ROOM_WIDTH; i++) {
+                for (int j = 0; j < ROOM_HEIGHT; j++) {
+                    game->dungeon->room->block[i][j].dst.x = i * BLOCK_WIDTH + game->camera.position.x;
+                    game->dungeon->room->block[i][j].dst.y = j * BLOCK_HEIGHT + game->camera.position.y;
+                }
+            }   
+
+            // Vai para a próxima sala na lista.
+            currentRoom = currentRoom->next;
         }
 
         // Verifica colisão do jogador com os blocos da masmorra.

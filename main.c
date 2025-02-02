@@ -3,9 +3,6 @@
 
 // Função principal.
 int main(int argc, char *argv[]) {
-    // Função para tratar a linha de comando.
-    handleCommandLine(argc, argv);
-
     // Cria uma instância do jogo.
     Game *game = malloc(sizeof(Game));
     if (!game) {

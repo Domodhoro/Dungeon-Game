@@ -22,9 +22,9 @@ static const BlockProperties blockProperties[] = {
 };
 
 // Configura as propriedades de cada bloco.
-void setBlockProperties(Game *game, const int i, const int j) {
+void setBlockProperties(Room *room, lua_State *L, const int i, const int j) {
     // Lê o tipo de bloco da tabela lua.
-    int blockType = (int)lua_tonumber(game->L, -1);
+    int blockType = (int)lua_tonumber(L, -1);
     
     // Verifica se o tipo de bloco é válido.
     if (blockType < 0 || blockType >= sizeof(blockProperties) / sizeof(blockProperties[0])) {
@@ -33,10 +33,10 @@ void setBlockProperties(Game *game, const int i, const int j) {
     }
     
     // Define as propriedades do bloco de acordo com o tipo.
-    game->dungeon->block[i][j].type                    = blockType;
-    game->dungeon->block[i][j].properties.src          = blockProperties[blockType].src;
-    game->dungeon->block[i][j].properties.isSolid      = blockProperties[blockType].isSolid;
-    game->dungeon->block[i][j].properties.isBackground = blockProperties[blockType].isBackground;
+    room->block[i][j].type                    = blockType;
+    room->block[i][j].properties.src          = blockProperties[blockType].src;
+    room->block[i][j].properties.isSolid      = blockProperties[blockType].isSolid;
+    room->block[i][j].properties.isBackground = blockProperties[blockType].isBackground;
 }
 
 // Atualiza a textura do jogador com base na direção.
@@ -93,10 +93,10 @@ _Bool isCursorInsideRect(const SDL_Point *cursorPosition, const SDL_Rect *dst) {
 _Bool checkCollisionWithBlock(Game *game) {
     SDL_Rect blockDst;
     // Laço que percorre todos os blocos da masmorra.
-    for (int i = 0; i < DUNGEON_WIDTH; i++) {
-        for (int j = 0; j < DUNGEON_HEIGHT; j++) {
-            if (game->dungeon->block[i][j].properties.isSolid) {
-                blockDst = game->dungeon->block[i][j].dst;
+    for (int i = 0; i < ROOM_WIDTH; i++) {
+        for (int j = 0; j < ROOM_HEIGHT; j++) {
+            if (game->dungeon->room->block[i][j].properties.isSolid) {
+                blockDst = game->dungeon->room->block[i][j].dst;
 
                 blockDst.x = i * BLOCK_WIDTH  + game->camera.position.x;
                 blockDst.y = j * BLOCK_HEIGHT + game->camera.position.y;
@@ -132,4 +132,4 @@ _Bool loadFont(Game *game, const char *filePath, const FONT_ID ID, const int fon
     return true;
 }
 
-#endif //  UTILS_H
+#endif // UTILS_H

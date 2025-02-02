@@ -130,6 +130,7 @@ _Bool init(Game *game) {
 
     // Configura os objetos do jogo.
     if (!setup(game)) {
+        finish(game);
         return false;
     }
 

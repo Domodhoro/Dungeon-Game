@@ -22,28 +22,36 @@ static void renderPlayer(Game *game) {
     SDL_RenderCopy(game->renderer, game->textures[HEART_TEXTURE], &game->player.hearts.src, &game->player.hearts.dst);
 }
 
-// Renderiza o fundo da masmorra.
-static void renderBackgroundDungeon(Game *game) {
-    for (int i = 0; i < DUNGEON_WIDTH; i++) {
-        for (int j = 0; j < DUNGEON_HEIGHT; j++) {
-            if (game->dungeon->block[i][j].type != AIR && game->dungeon->block[i][j].properties.isBackground) {
-                // Renderiza os blocos da masmorra.
-                SDL_RenderCopy(game->renderer, game->textures[DUNGEON_TEXTURE], &game->dungeon->block[i][j].properties.src, &game->dungeon->block[i][j].dst);   
+// Função para renderizar a masmorra.
+static void renderDungeonLayer(Game *game, const _Bool isBackground) {
+    // Começa pela primeira sala da masmorra.
+    Room *currentRoom = game->dungeon->room;
+
+    // Enquanto houver uma sala na lista.
+    while (currentRoom != NULL) {
+        for (int i = 0; i < ROOM_WIDTH; i++) {
+            for (int j = 0; j < ROOM_HEIGHT; j++) {
+                // Verifica se o bloco não é de ar e se o bloco deverá estar atrás ou na frente do jogador.
+                if (game->dungeon->room->block[i][j].type != AIR && game->dungeon->room->block[i][j].properties.isBackground == isBackground) {
+                    // Renderiza o bloco na tela.
+                    SDL_RenderCopy(game->renderer, game->textures[DUNGEON_TEXTURE], &game->dungeon->room->block[i][j].properties.src, &game->dungeon->room->block[i][j].dst);   
+                }
             }
         }
+
+        // Vai para a próxima sala na lista.
+        currentRoom = currentRoom->next;
     }
 }
 
-// Renderiza a frente da masmorra.
+// Função para renderizar o fundo da masmorra.
+static void renderBackgroundDungeon(Game *game) {
+    renderDungeonLayer(game, true);
+}
+
+// Função para renderizar a frente da masmorra.
 static void renderForegroundDungeon(Game *game) {
-    for (int i = 0; i < DUNGEON_WIDTH; i++) {
-        for (int j = 0; j < DUNGEON_HEIGHT; j++) {
-            if (game->dungeon->block[i][j].type != AIR && !game->dungeon->block[i][j].properties.isBackground) {
-                // Renderiza os blocos da masmorra.
-                SDL_RenderCopy(game->renderer, game->textures[DUNGEON_TEXTURE], &game->dungeon->block[i][j].properties.src, &game->dungeon->block[i][j].dst);   
-            }
-        }
-    }
+    renderDungeonLayer(game, false);
 }
 
 // Renderiza o inventário do jogador.

@@ -26,8 +26,8 @@
 #define BLOCK_HEIGHT 32
 
 // Define o tamanho máximo de uma masmorra.
-#define DUNGEON_WIDTH  32
-#define DUNGEON_HEIGHT 32
+#define ROOM_WIDTH  32
+#define ROOM_HEIGHT 32
 
 // Define o número máximo de botões no menu principal.
 #define MAX_MAIN_MENU_BUTTONS 2

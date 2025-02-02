@@ -21,17 +21,35 @@ static void destroyFonts(Game *game) {
     }
 }
 
+// Função que destrói as salas e a masmorra.
+static void destroyDungeon(Game *game) {
+    if (game->dungeon) {
+        // Começa pela primeira sala da masmorra.
+        Room *currentRoom = game->dungeon->room;
+
+        // Itera sobre todas as salas.
+        while (currentRoom != NULL) {
+            // Guarda o ponteiro para a próxima sala.
+            Room *nextRoom = currentRoom->next;
+            // Libera a memória da sala atual.
+            free(currentRoom);                   
+            // Avança para a próxima sala.
+            currentRoom = nextRoom;              
+        }
+
+        // Após liberar todas as salas, zera o ponteiro para a lista de salas e libera a memória da masmorra.
+        game->dungeon->room = NULL;
+        free(game->dungeon);
+        game->dungeon = NULL;
+    }
+}
+
 // Função responsável por encerrar o jogo e liberar todos os recursos alocados.
 void finish(Game *game) {    
     // Verifica se os objetos do jogo existem e os destroem, liberando memória.
     destroyTextures(game);
     destroyFonts(game);
-
-    // Destrói a masmorra, liberando memória.
-    if (game->dungeon) {
-        free(game->dungeon);
-        game->dungeon = NULL;
-    }
+    destroyDungeon(game);
 
     // Destrói o renderizador e a janela, liberando memória.
     if (game->renderer) {
