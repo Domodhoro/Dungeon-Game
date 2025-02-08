@@ -6,11 +6,11 @@ int main(int argc, char *argv[]) {
     // Cria uma instância do jogo.
     Game *game = malloc(sizeof(Game));
     if (!game) {
-        fprintf(stderr, "Falha ao alocar mémoria para o jogo.\n");
+        fprintf(stderr, "Falha ao alocar mémoria para a estrutura principal do jogo.\n");
         // Encerra o programa com falha.
         return -1;
     }
-    // Zera a memória alocada para a estrutura principal.
+    // Zera a memória alocada para a estrutura do jogo.
     memset(game, 0, sizeof(Game));
 
     // Inicializa o jogo, se falhar, libera a memória e encerra o programa.
@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
     }
 
     // Inicia o jogo e entra na laço principal.
-    game->running = true;
+    game->isRunning = true;
     do {
         // Marca o início do frame atual.
         game->frameStart = SDL_GetTicks();
@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
         if (game->frameTime < (Uint32)FRAME_TIME) {
             SDL_Delay((Uint32)FRAME_TIME - game->frameTime);
         }
-    } while (game->running);
+    } while (game->isRunning);
 
     // Finaliza o jogo.
     finish(game);

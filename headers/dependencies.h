@@ -1,7 +1,7 @@
 #ifndef DEPENDENCIES_H
 #define DEPENDENCIES_H
 
-// Bibliotecas padrão do C.
+// Biblioteca padrão do C.
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -24,7 +24,7 @@
 	#include <lua/lauxlib.h>
 #endif
 
-// Incluindo os cabeçalhos necessários para o jogo.
+// Incluindo outros cabeçalhos necessários para o jogo.
 #include "../headers/defs.h"
 #include "../headers/enums.h"
 #include "../headers/structs.h"

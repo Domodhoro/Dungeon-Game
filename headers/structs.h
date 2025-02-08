@@ -10,8 +10,7 @@ typedef struct Camera {
 // Estrutura para armazenar as propriedades de cada tipo de bloco.
 typedef struct BlockProperties {
     SDL_Rect src;
-    _Bool isSolid;
-    _Bool isBackground;
+    _Bool isSolid, isBackground;
 } BlockProperties;
 
 // Estrututa que representa um bloco.
@@ -24,8 +23,8 @@ typedef struct Block {
 // Estrututa que representa uma sala da masmorra.
 typedef struct Room {
     Block block[ROOM_WIDTH][ROOM_HEIGHT];
-    int level;
-    struct Room *next;
+    SDL_Point position;
+    struct Room* next;
 } Room;
 
 // Estrutura que representa uma masmorra.
@@ -42,6 +41,7 @@ typedef struct Heart {
 typedef struct Player {
     SDL_Rect src, dst;
     Heart hearts;
+    DIRECTION direction;
 } Player;
 
 // Estrututa que representa o inventário do jogador.
@@ -89,7 +89,7 @@ typedef struct UserInputs {
 typedef struct Game {
     GAME_STATE state;
 
-    lua_State *L;
+    lua_State *lua;
 
     SDL_Window *window;
 
@@ -99,7 +99,7 @@ typedef struct Game {
 
     SDL_Event event;
 
-    _Bool running;
+    _Bool isRunning;
     Uint32 frameStart, frameTime;
 
     SDL_Texture *textures[MAX_TEXTURES];

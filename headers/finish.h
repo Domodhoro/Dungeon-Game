@@ -1,26 +1,6 @@
 #ifndef FINISH_H
 #define FINISH_H
 
-// Função que destrói as texturas do jogo.
-static void destroyTextures(Game *game) {
-    for (int i = 0; i < MAX_TEXTURES; i++) {
-        if (game->textures[i]) {
-            SDL_DestroyTexture(game->textures[i]);
-            game->textures[i] = NULL;
-        }
-    }
-}
-
-// Função que destrói a fonte do jogo.
-static void destroyFonts(Game *game) {
-    for (int i = 0; i < MAX_FONTS; i++) {
-        if (game->font[i]) {
-            TTF_CloseFont(game->font[i]);
-            game->font[i] = NULL;
-        }
-    }
-}
-
 // Função que destrói as salas e a masmorra.
 static void destroyDungeon(Game *game) {
     if (game->dungeon) {
@@ -44,12 +24,32 @@ static void destroyDungeon(Game *game) {
     }
 }
 
+// Função que destrói as texturas do jogo.
+static void destroyTextures(Game *game) {
+    for (int i = 0; i < MAX_TEXTURES; i++) {
+        if (game->textures[i]) {
+            SDL_DestroyTexture(game->textures[i]);
+            game->textures[i] = NULL;
+        }
+    }
+}
+
+// Função que destrói a fonte do jogo.
+static void destroyFonts(Game *game) {
+    for (int i = 0; i < MAX_FONTS; i++) {
+        if (game->font[i]) {
+            TTF_CloseFont(game->font[i]);
+            game->font[i] = NULL;
+        }
+    }
+}
+
 // Função responsável por encerrar o jogo e liberar todos os recursos alocados.
 void finish(Game *game) {    
     // Verifica se os objetos do jogo existem e os destroem, liberando memória.
+    destroyDungeon(game);
     destroyTextures(game);
     destroyFonts(game);
-    destroyDungeon(game);
 
     // Destrói o renderizador e a janela, liberando memória.
     if (game->renderer) {
@@ -68,7 +68,10 @@ void finish(Game *game) {
     SDL_Quit();
 
     // Fecha o estado lua.
-    lua_close(game->L);
+    if (game->lua) {
+        lua_close(game->lua);
+        game->lua = NULL;
+    }
 }
 
 #endif // FINISH_H

@@ -69,18 +69,18 @@ void render(Game *game) {
 
     // Renderiza os elementos do jogo com base no estado do mesmo.
     switch (game->state) {
-    case MAIN_MENU:
-        renderMainMenu(game);
-        break;
-    case ACTIVE:
-        renderBackgroundDungeon(game);
-        renderPlayer(game);
-        renderForegroundDungeon(game);
-        renderInventory(game);
-        break;
-    case PAUSE:
+        case MAIN_MENU:
+            renderMainMenu(game);
+            break;
+        case ACTIVE:
+            renderBackgroundDungeon(game);
+            renderPlayer(game);
+            renderForegroundDungeon(game);
+            renderInventory(game);
+            break;
+        case PAUSE:
 
-        break;
+            break;
     }
     
     // Apresenta o conteúdo renderizado na tela.

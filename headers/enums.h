@@ -3,23 +3,23 @@
 
 // Estados do programa.
 typedef enum GAME_STATE {
-	MAIN_MENU = -1,
-	ACTIVE,
-	PAUSE
+    MAIN_MENU = -1,
+    ACTIVE,
+    PAUSE
 } GAME_STATE;
 
 // Define as direções do jogador.
 typedef enum DIRECTION {
-	NONE = -1,
-	UP,
-	LEFT,
-	DOWN,
-	RIGHT
+    NONE = -1,
+    UP,
+    LEFT,
+    DOWN,
+    RIGHT
 } DIRECTION;
 
 // Define os tipos de blocos da masmorra.
 typedef enum BLOCK_TYPE {
-	AIR     = 0,
+    AIR     = 0,
     FLOOR_1 = 1,
     FLOOR_2 = 2,
     WALL_1  = 3,

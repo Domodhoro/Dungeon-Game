@@ -40,8 +40,8 @@ void setBlockProperties(Room *room, lua_State *L, const int i, const int j) {
 }
 
 // Atualiza a textura do jogador com base na direção.
-void updatePlayerTexture(Game *game, const DIRECTION direction) {
-    switch ((int)direction) {
+void updatePlayerAnimation(Game *game) {
+    switch ((int)game->player.direction) {
         case UP:
             game->player.src.x = 0;
             break;
@@ -92,24 +92,59 @@ _Bool isCursorInsideRect(const SDL_Point *cursorPosition, const SDL_Rect *dst) {
 // Função que verifica a colisão do jogador com os blocos da masmorra.
 _Bool checkCollisionWithBlock(Game *game) {
     SDL_Rect blockDst;
-    // Laço que percorre todos os blocos da masmorra.
-    for (int i = 0; i < ROOM_WIDTH; i++) {
-        for (int j = 0; j < ROOM_HEIGHT; j++) {
-            if (game->dungeon->room->block[i][j].properties.isSolid) {
-                blockDst = game->dungeon->room->block[i][j].dst;
 
-                blockDst.x = i * BLOCK_WIDTH  + game->camera.position.x;
-                blockDst.y = j * BLOCK_HEIGHT + game->camera.position.y;
+    // Começa pela primeira sala da masmorra.
+    Room *currentRoom = game->dungeon->room;
 
-                // Se houver colisão, retorna verdadeiro.
-                if (SDL_HasIntersection(&game->player.dst, &blockDst)) {
-                    return true;
+     // Enquanto houver uma sala na lista.
+    while (currentRoom != NULL) {
+        // Laço que percorre todos os blocos da masmorra.
+        for (int i = 0; i < ROOM_WIDTH; i++) {
+            for (int j = 0; j < ROOM_HEIGHT; j++) {
+                if (currentRoom->block[i][j].properties.isSolid) {
+                    blockDst = currentRoom->block[i][j].dst;
+
+                    blockDst.x = i * BLOCK_WIDTH  + game->camera.position.x;
+                    blockDst.y = j * BLOCK_HEIGHT + game->camera.position.y;
+
+                    blockDst.x += currentRoom->position.x;
+                    blockDst.y += currentRoom->position.y;
+
+                    // Se houver colisão, retorna verdadeiro.
+                    if (SDL_HasIntersection(&game->player.dst, &blockDst)) {
+                        return true;
+                    }
                 }
             }
         }
+
+        // Vai para a próxima sala na lista.
+        currentRoom = currentRoom->next;
     }
+
     // Senão houver colisão, retorna falso.
     return false;
+}
+
+// Função responsável por configurar o ícone da janela de visualização do jogo.
+_Bool loadWindowIcon(Game *game, const char *filePath) {
+    // Carrega a imagem do ícone da janela e caso ocorra erro ao carregar o ícone, exibe uma mensagem de erro.
+    SDL_Surface *iconSurface = IMG_Load(filePath);
+    if (!iconSurface) {
+        fprintf(stderr, "Falha ao carregar o ícone da janela de visualização: %s\n", IMG_GetError());
+        return false;
+    }
+    SDL_SetWindowIcon(game->window, iconSurface);
+    // Libera a superfície que foi usada para o ícone.
+    SDL_FreeSurface(iconSurface);
+    iconSurface = NULL;
+    return true;
+}
+
+// Função responsável por carregar a textura do cursor do mouse.
+_Bool loadCursorTexture(Game *game, const char *filePath) {
+    
+    return true;
 }
 
 // Função responsável por carregar as texturas do jogo.
@@ -131,5 +166,34 @@ _Bool loadFont(Game *game, const char *filePath, const FONT_ID ID, const int fon
     }
     return true;
 }
+
+// Função para criar e configurar um botão.
+_Bool createButton(Game *game, int buttonIndex, const char *label, int yPosition, SDL_Color textColor) {
+    const int buttonWidth  = 5 * 32;
+    const int buttonHeight = 32;
+    
+    // Define a textura do botão.
+    game->mainMenu.button[buttonIndex].src = (SDL_Rect) {
+        0, 0, buttonWidth, buttonHeight
+    };
+    
+    // Define a posição do botão.
+    game->mainMenu.button[buttonIndex].dst = (SDL_Rect) {
+        (SCREEN_WIDTH - buttonWidth) / 2, yPosition, buttonWidth, buttonHeight
+    };
+    
+    // Cria o texto para o botão.
+    game->mainMenu.button[buttonIndex].text = newText(game, label, 0, 0, textColor);
+    if (!game->mainMenu.button[buttonIndex].text.texture) {
+        fprintf(stderr, "Falha ao criar texto para o botão %s no menu principal.\n", label);
+        return false;
+    }
+    
+    // Posiciona o texto no centro do botão.
+    game->mainMenu.button[buttonIndex].text.dst.x = (SCREEN_WIDTH - game->mainMenu.button[buttonIndex].text.dst.w) / 2;
+    game->mainMenu.button[buttonIndex].text.dst.y = yPosition + (buttonHeight - game->mainMenu.button[buttonIndex].text.dst.h) / 2;
+    return true;
+}
+
 
 #endif // UTILS_H

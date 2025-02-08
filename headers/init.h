@@ -3,16 +3,19 @@
 
 // Função responsável por iniciar um estado lua.
 static _Bool initLua(Game *game) {
-    game->L = luaL_newstate();
-    if (!game->L) {
+    game->lua = luaL_newstate();
+    if (!game->lua) {
         fprintf(stderr, "Falha ao criar estado lua.\n");
         return false;
     }
     // Abre as bibliotecas do lua.
-    luaL_openlibs(game->L);
-    // Abre/lê arquivo de script lua e caso ocorra erro, exibe uma mensagem.
-    if (luaL_dofile(game->L, "./scripts/dungeon.lua") != LUA_OK) {
-        fprintf(stderr, "Falha ao abrir/ler arquivo de script lua: %s\n", lua_tostring(game->L, -1));
+    luaL_openlibs(game->lua);
+
+    // Abre/lê arquivo de script lua e caso ocorra erro, exibe uma mensagem e fecha o estado lua.
+    if (luaL_dofile(game->lua, "./scripts/dungeon.lua") != LUA_OK) {
+        fprintf(stderr, "Falha ao abrir/ler arquivo de script lua: %s\n", lua_tostring(game->lua, -1));
+        lua_close(game->lua);
+        game->lua = NULL;
         return false;
     }
     return true;
@@ -49,6 +52,7 @@ static _Bool initSDL() {
     return true;
 }
 
+// Função responsável por carregar as texturas dos objetos do jogo.
 static _Bool loadTextures(Game *game) {
     if (!loadTexture(game, "./assets/sprites/dungeon.png", DUNGEON_TEXTURE)) {
         return false;
@@ -71,15 +75,18 @@ static _Bool loadTextures(Game *game) {
     return true;
 }
 
-// Função responsável por inicializar todos os recursos necessários para o jogo.
-_Bool init(Game *game) {
-    // Inicializa um estado lua.
-    if (!initLua(game)) {
+// Função responsável por carregar as fontes do jogo.
+static _Bool loadFonts(Game *game) {
+    if (!loadFont(game, "./assets/fonts/04B_03__.TTF", FONT_1, 24)) {
         return false;
     }
+    return true;
+}
 
-    // Inicializa o SDL.
-    if (!initSDL()) {
+// Função responsável por inicializar todos os recursos necessários para o jogo.
+_Bool init(Game *game) {
+    // Inicializa um estado lua e o SDL.
+    if (!initLua(game) || !initSDL()) {
         return false;
     }
 
@@ -91,16 +98,11 @@ _Bool init(Game *game) {
         return false;
     }
 
-    // Carrega a imagem do ícone da janela e caso ocorra erro ao carregar o ícone, exibe uma mensagem de erro.
-    SDL_Surface *iconSurface = IMG_Load("./assets/sprites/icon.png");
-    if (!iconSurface) {
-        fprintf(stderr, "Falha ao carregar o ícone: %s\n", IMG_GetError());
+    // Carrega e configura o ícone da janela de visualização e a textura do cursor do mouse.
+    if (!loadWindowIcon(game, "./assets/sprites/icon.png") || !loadCursorTexture(game, "./assets/sprites/cursorTexture.png")) {
         finish(game);
         return false;
     }
-    SDL_SetWindowIcon(game->window, iconSurface);
-    // Libera a superfície que foi usada para o ícone.
-    SDL_FreeSurface(iconSurface);
 
     // Posiciona o mouse no centro da janela.
     SDL_WarpMouseInWindow(game->window, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
@@ -115,15 +117,15 @@ _Bool init(Game *game) {
     }
 
     // Define a cor de fundo.
-    game->backgroundColor = WHITE;
+    game->backgroundColor = GRAY;
 
     // Define as dimensões da janela de visualização do renderizador.
     game->viewport = (SDL_Rect) {
         0, 0, SCREEN_WIDTH, SCREEN_HEIGHT
     };
 
-    // Carrega as textutas e a fonte do jogo.
-    if (!loadTextures(game) || !loadFont(game, "./assets/fonts/04B_03__.TTF", FONT_1, 24)) {
+    // Carrega as textutas e as fontes do jogo.
+    if (!loadTextures(game) || !loadFonts(game)) {
         finish(game);
         return false;
     }
