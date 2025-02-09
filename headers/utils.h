@@ -83,19 +83,4 @@ _Bool checkCollisionWithBlock(Game *game) {
     return false;
 }
 
-// Função responsável por configurar o ícone da janela de visualização do jogo.
-_Bool loadWindowIcon(Game *game, const char *filePath) {
-    // Carrega a imagem do ícone da janela e caso ocorra erro ao carregar o ícone, exibe uma mensagem de erro.
-    SDL_Surface *iconSurface = IMG_Load(filePath);
-    if (not iconSurface) {
-        SDL_Log("Falha ao carregar o ícone da janela de visualização: %s\n", IMG_GetError());
-        return false;
-    }
-    SDL_SetWindowIcon(game->window, iconSurface);
-    // Libera a superfície que foi usada para o ícone.
-    SDL_FreeSurface(iconSurface);
-    iconSurface = NULL;
-    return true;
-}
-
 #endif // UTILS_H

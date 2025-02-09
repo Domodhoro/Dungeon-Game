@@ -21,43 +21,6 @@ static _Bool initLua(Game *game) {
     return true;
 }
 
-// Cria a janela do jogo com o título e dimensões definidas e caso ocorra erro, exibe uma mensagem.
-static _Bool createWindow(Game *game) {
-    game->window = SDL_CreateWindow(SCREEN_TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
-    if (not game->window) {
-        SDL_Log("Falha ao criar janela de visualização: %s.\n", SDL_GetError());
-        return false;
-    }
-
-    // Carrega e configura o ícone da janela de visualização e a textura do cursor do mouse.
-    if (not loadWindowIcon(game, "./assets/sprites/icon.png")) {
-        return false;
-    }
-
-    // Posiciona o mouse no centro da janela.
-    SDL_WarpMouseInWindow(game->window, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
-    return true;
-}
-
-// Criação e configuração do renderizador.
-static _Bool createRenderer(Game *game) {
-    game->renderer = SDL_CreateRenderer(game->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-    if (not game->renderer) {
-        // Caso ocorra erro ao criar o renderizador, exibe a mensagem de erro.
-        SDL_Log("Falha ao criar o renderizador: %s.\n", SDL_GetError());
-        return false;
-    }
-
-    // Define a cor de fundo.
-    game->backgroundColor = GRAY;
-
-    // Define as dimensões da janela de visualização do renderizador.
-    game->viewport = (SDL_Rect) {
-        0, 0, SCREEN_WIDTH, SCREEN_HEIGHT
-    };
-    return true;
-}
-
 // Função responsável por inicializar todos os recursos necessários para o jogo.
 _Bool init(Game *game) {
     // Inicializa um estado lua.

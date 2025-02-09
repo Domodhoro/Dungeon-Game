@@ -1,14 +1,23 @@
 #ifndef RENDER_H
 #define RENDER_H
 
-// Função para renderizar o fundo da masmorra.
-static void renderBackgroundDungeon(Game *game) {
-    renderDungeonLayer(game, true);
-}
+// Criação e configuração do renderizador.
+_Bool createRenderer(Game *game) {
+    game->renderer = SDL_CreateRenderer(game->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    if (not game->renderer) {
+        // Caso ocorra erro ao criar o renderizador, exibe a mensagem de erro.
+        SDL_Log("Falha ao criar o renderizador: %s.\n", SDL_GetError());
+        return false;
+    }
 
-// Função para renderizar a frente da masmorra.
-static void renderForegroundDungeon(Game *game) {
-    renderDungeonLayer(game, false);
+    // Define a cor de fundo.
+    game->backgroundColor = GRAY;
+
+    // Define as dimensões da janela de visualização do renderizador.
+    game->viewport = (SDL_Rect) {
+        0, 0, SCREEN_WIDTH, SCREEN_HEIGHT
+    };
+    return true;
 }
 
 // Função responsável por renderizar o conteúdo na tela.

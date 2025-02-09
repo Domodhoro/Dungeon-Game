@@ -43,6 +43,7 @@
 #include "../headers/render.h"
 #include "../headers/finish.h"
 #include "../headers/setup.h"
+#include "../headers/window.h"
 #include "../headers/init.h"
 
 #endif // DEPENDENCIES_H

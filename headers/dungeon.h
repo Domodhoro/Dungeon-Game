@@ -156,6 +156,16 @@ void renderDungeonLayer(Game *game, const _Bool isBackground) {
     }
 }
 
+// Função para renderizar o fundo da masmorra.
+void renderBackgroundDungeon(Game *game) {
+    renderDungeonLayer(game, true);
+}
+
+// Função para renderizar a frente da masmorra.
+void renderForegroundDungeon(Game *game) {
+    renderDungeonLayer(game, false);
+}
+
 // Função que destrói as salas e a masmorra.
 void destroyDungeon(Game *game) {
     if (game->dungeon) {
