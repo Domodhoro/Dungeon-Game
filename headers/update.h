@@ -27,7 +27,9 @@ void update(Game *game) {
         case ACTIVE:
             // Move a câmera e atualizar a direção do jogador.
             updateCamera(game);
-            // Atualiza a textura do jogador.
+            // Atualiza a direção do jogador.
+            updatePlayer(game);
+            // Anima o jogador.
             updatePlayerAnimation(game);
 
             // Verifica colisão do jogador com os blocos da masmorra e se houver, retorna para a posição anterior.

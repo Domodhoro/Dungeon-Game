@@ -22,6 +22,25 @@ void setupPlayer(Game *game) {
     game->player.direction = NONE;
 }
 
+// Atualiza a direção do jogador.
+void updatePlayer(Game *game) {
+    if (game->userInputs.keyboard.states[SDL_SCANCODE_W]) {
+        game->player.direction = UP;
+    }
+    // Move a câmera para a esquerda.
+    if (game->userInputs.keyboard.states[SDL_SCANCODE_A]) {
+        game->player.direction = LEFT;
+    }
+    // Move a câmera para baixo.
+    if (game->userInputs.keyboard.states[SDL_SCANCODE_S]) {
+        game->player.direction = DOWN;
+    }
+    // Move a câmera para a direita.
+    if (game->userInputs.keyboard.states[SDL_SCANCODE_D]) {
+        game->player.direction = RIGHT;
+    }
+}
+
 // Atualiza a textura do jogador com base na direção.
 void updatePlayerAnimation(Game *game) {
     switch ((int)game->player.direction) {
