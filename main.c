@@ -52,5 +52,3 @@ int main(int argc, char *argv[]) {
     // Encerra o programa com sucesso.
     return 0;
 }
-
-// https://www.youtube.com/watch?v=5TitKidMhIc
