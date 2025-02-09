@@ -5,7 +5,7 @@
 int main(int argc, char *argv[]) {
     // Cria uma instância do jogo.
     Game *game = malloc(sizeof(Game));
-    if (!game) {
+    if (not game) {
         fprintf(stderr, "Falha ao alocar mémoria para a estrutura principal do jogo.\n");
         // Encerra o programa com falha.
         return -1;
@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
     memset(game, 0, sizeof(Game));
 
     // Inicializa o jogo, se falhar, libera a memória e encerra o programa.
-    if (!init(game)) {
+    if (not init(game)) {
         free(game);
         game = NULL;
         // Encerra o programa com falha.
@@ -48,3 +48,5 @@ int main(int argc, char *argv[]) {
     // Encerra o programa com sucesso.
     return 0;
 }
+
+// https://www.youtube.com/watch?v=5TitKidMhIc

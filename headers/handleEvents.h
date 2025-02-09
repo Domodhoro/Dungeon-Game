@@ -38,11 +38,11 @@ static void handleMouseButtonsUp(Game *game) {
 
 // Função que trata os eventos.
 void handleEvents(Game *game) {
-    // Retorna as coordenadas atuais do cursor do mouse.
-    SDL_GetMouseState(&game->userInputs.mouse.position.x, &game->userInputs.mouse.position.y);
-
     // Atualiza o estado atual do teclado.
     game->userInputs.keyboard.states = SDL_GetKeyboardState(NULL);
+    
+    // Retorna as coordenadas atuais do cursor do mouse.
+    SDL_GetMouseState(&game->userInputs.mouse.position.x, &game->userInputs.mouse.position.y);
     
     // Verifica se há eventos na fila de eventos do SDL.
     while (SDL_PollEvent(&game->event)) {

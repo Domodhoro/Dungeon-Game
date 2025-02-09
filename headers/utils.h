@@ -22,12 +22,12 @@ static const BlockProperties blockProperties[] = {
 };
 
 // Configura as propriedades de cada bloco.
-void setBlockProperties(Room *room, lua_State *L, const int i, const int j) {
+void setBlockProperties(Room *room, lua_State *L, int i, int j) {
     // Lê o tipo de bloco da tabela lua.
     int blockType = (int)lua_tonumber(L, -1);
     
     // Verifica se o tipo de bloco é válido.
-    if (blockType < 0 || blockType >= sizeof(blockProperties) / sizeof(blockProperties[0])) {
+    if (blockType < 0 or blockType >= sizeof(blockProperties) / sizeof(blockProperties[0])) {
         // Em caso de erro caso o tipo de bloco não seja válido.
         return;
     }
@@ -39,49 +39,9 @@ void setBlockProperties(Room *room, lua_State *L, const int i, const int j) {
     room->block[i][j].properties.isBackground = blockProperties[blockType].isBackground;
 }
 
-// Atualiza a textura do jogador com base na direção.
-void updatePlayerAnimation(Game *game) {
-    switch ((int)game->player.direction) {
-        case UP:
-            game->player.src.x = 0;
-            break;
-        case DOWN:
-            game->player.src.x = 32;
-            break;
-        case RIGHT:
-            game->player.src.x = 32;
-            break;
-        case LEFT:
-            game->player.src.x = 0;
-            break;
-    }
-}
-
-// Criar a superfície com o texto.
-Text newText(Game *game, const char *input, int x, int y, SDL_Color color) {
-    // Cria uma estrutura de texto.
-    Text text;
-    SDL_Surface *textSurface = TTF_RenderText_Blended(game->font[0], input, color);
-    if (!textSurface) {
-        printf("Erro ao criar superfície de texto: %s\n", TTF_GetError());
-        return text;
-    }
-
-    // Definir o retângulo para renderizar o texto.
-    text.dst = (SDL_Rect) {
-        x, y, textSurface->w, textSurface->h
-    };
-
-    // Criar a textura a partir da superfície.
-    text.texture = SDL_CreateTextureFromSurface(game->renderer, textSurface);
-    // Liberar a superfície após criar a textura.
-    SDL_FreeSurface(textSurface);
-    return text;
-}
-
 // Função que verifica se o cursor do mouse está dentro da área de um retângulo.
 _Bool isCursorInsideRect(const SDL_Point *cursorPosition, const SDL_Rect *dst) {
-    if (cursorPosition->x >= dst->x && cursorPosition->x <= dst->x + dst->w && cursorPosition->y >= dst->y && cursorPosition->y <= dst->y + dst->h) {
+    if (cursorPosition->x >= dst->x and cursorPosition->x <= dst->x + dst->w and cursorPosition->y >= dst->y and cursorPosition->y <= dst->y + dst->h) {
         // Cursor está dentro do retângulo.
         return true;
     }
@@ -95,9 +55,8 @@ _Bool checkCollisionWithBlock(Game *game) {
 
     // Começa pela primeira sala da masmorra.
     Room *currentRoom = game->dungeon->room;
-
      // Enquanto houver uma sala na lista.
-    while (currentRoom != NULL) {
+    while (currentRoom not_eq NULL) {
         // Laço que percorre todos os blocos da masmorra.
         for (int i = 0; i < ROOM_WIDTH; i++) {
             for (int j = 0; j < ROOM_HEIGHT; j++) {
@@ -117,11 +76,9 @@ _Bool checkCollisionWithBlock(Game *game) {
                 }
             }
         }
-
         // Vai para a próxima sala na lista.
         currentRoom = currentRoom->next;
     }
-
     // Senão houver colisão, retorna falso.
     return false;
 }
@@ -130,8 +87,8 @@ _Bool checkCollisionWithBlock(Game *game) {
 _Bool loadWindowIcon(Game *game, const char *filePath) {
     // Carrega a imagem do ícone da janela e caso ocorra erro ao carregar o ícone, exibe uma mensagem de erro.
     SDL_Surface *iconSurface = IMG_Load(filePath);
-    if (!iconSurface) {
-        fprintf(stderr, "Falha ao carregar o ícone da janela de visualização: %s\n", IMG_GetError());
+    if (not iconSurface) {
+        SDL_Log("Falha ao carregar o ícone da janela de visualização: %s\n", IMG_GetError());
         return false;
     }
     SDL_SetWindowIcon(game->window, iconSurface);
@@ -140,60 +97,5 @@ _Bool loadWindowIcon(Game *game, const char *filePath) {
     iconSurface = NULL;
     return true;
 }
-
-// Função responsável por carregar a textura do cursor do mouse.
-_Bool loadCursorTexture(Game *game, const char *filePath) {
-    
-    return true;
-}
-
-// Função responsável por carregar as texturas do jogo.
-_Bool loadTexture(Game *game, const char *filePath, const TEXTURE_ID ID) {
-    game->textures[ID] = IMG_LoadTexture(game->renderer, filePath);
-    if (!game->textures[ID]) {
-        fprintf(stderr, "Falha ao carregar textura: %s\n", IMG_GetError());
-        return false;
-    }
-    return true;
-}
-
-// Função que carrega a fonte de texto.
-_Bool loadFont(Game *game, const char *filePath, const FONT_ID ID, const int fontSize) {
-    game->font[ID] = TTF_OpenFont(filePath, fontSize);
-    if (!game->font[ID]) {
-        fprintf(stderr, "Falha ao carregar a fonte: %s\n", TTF_GetError());
-        return false;
-    }
-    return true;
-}
-
-// Função para criar e configurar um botão.
-_Bool createButton(Game *game, int buttonIndex, const char *label, int yPosition, SDL_Color textColor) {
-    const int buttonWidth  = 5 * 32;
-    const int buttonHeight = 32;
-    
-    // Define a textura do botão.
-    game->mainMenu.button[buttonIndex].src = (SDL_Rect) {
-        0, 0, buttonWidth, buttonHeight
-    };
-    
-    // Define a posição do botão.
-    game->mainMenu.button[buttonIndex].dst = (SDL_Rect) {
-        (SCREEN_WIDTH - buttonWidth) / 2, yPosition, buttonWidth, buttonHeight
-    };
-    
-    // Cria o texto para o botão.
-    game->mainMenu.button[buttonIndex].text = newText(game, label, 0, 0, textColor);
-    if (!game->mainMenu.button[buttonIndex].text.texture) {
-        fprintf(stderr, "Falha ao criar texto para o botão %s no menu principal.\n", label);
-        return false;
-    }
-    
-    // Posiciona o texto no centro do botão.
-    game->mainMenu.button[buttonIndex].text.dst.x = (SCREEN_WIDTH - game->mainMenu.button[buttonIndex].text.dst.w) / 2;
-    game->mainMenu.button[buttonIndex].text.dst.y = yPosition + (buttonHeight - game->mainMenu.button[buttonIndex].text.dst.h) / 2;
-    return true;
-}
-
 
 #endif // UTILS_H

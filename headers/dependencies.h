@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+// Para alguns teclados.
+#include <iso646.h>
 
 // Bibliotecas SDL2.
 #include <SDL2/SDL.h>
@@ -28,7 +30,14 @@
 #include "../headers/defs.h"
 #include "../headers/enums.h"
 #include "../headers/structs.h"
+#include "../headers/texture.h"
+#include "../headers/text.h"
 #include "../headers/utils.h"
+#include "../headers/mainMenu.h"
+#include "../headers/camera.h"
+#include "../headers/inventory.h"
+#include "../headers/player.h"
+#include "../headers/dungeon.h"
 #include "../headers/handleEvents.h"
 #include "../headers/update.h"
 #include "../headers/render.h"
