@@ -3,10 +3,12 @@
 
 // Função que trata dos eventos de tecla pressionada do teclado.
 static void handleKeyDown(Game *game) {
+#if DEV
     // Se a tecla pressionada for ESC, encerra o jogo.
     if (game->userInputs.keyboard.states[SDL_SCANCODE_ESCAPE]) {
         game->isRunning = false;
     }
+#endif // DEV
 }
 
 // Função que trata dos eventos de tecla solta do teclado.

@@ -1,6 +1,9 @@
 #ifndef DEFS_H
 #define DEFS_H
 
+// Para a fase desenvolvimento do jogo.
+#define DEV true
+
 // As vezes é necessário para o SDL.
 #define SDL_HANDLED_MAIN
 

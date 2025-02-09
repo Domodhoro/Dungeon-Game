@@ -30,6 +30,7 @@
 #include "../headers/defs.h"
 #include "../headers/enums.h"
 #include "../headers/structs.h"
+#include "../headers/memoryManager.h"
 #include "../headers/texture.h"
 #include "../headers/text.h"
 #include "../headers/utils.h"

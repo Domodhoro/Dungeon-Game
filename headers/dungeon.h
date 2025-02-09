@@ -4,7 +4,7 @@
 // Função responsável por criar e inicializar uma nova sala.
 static Room *createAndInitializeRoom(Game *game, const char *roomName, const SDL_Point position) {
     // Cria uma instância da sala.
-    Room *newRoom = malloc(sizeof(Room));
+    Room *newRoom = myMalloc(sizeof(Room));
     if (not newRoom) {
         fprintf(stderr, "Falha ao alocar memória para a sala da masmorra.\n");
         return NULL;
@@ -17,7 +17,7 @@ static Room *createAndInitializeRoom(Game *game, const char *roomName, const SDL
     if (not lua_istable(game->lua, -1)) {
         fprintf(stderr, "Erro ao acessar a tabela da sala '%s': %s\n", roomName, lua_tostring(game->lua, -1));
         lua_pop(game->lua, 2);
-        free(newRoom);
+        myFree(newRoom);
         return NULL;
     }
 
@@ -88,7 +88,7 @@ static _Bool addRoomToDungeon(Game *game, const char *roomName, const SDL_Point 
 // Função responsável por criar e configurar uma masmorra.
 _Bool setupDungeon(Game *game) {
     // Cria uma instância da masmorra.
-    game->dungeon = malloc(sizeof(Dungeon));
+    game->dungeon = myMalloc(sizeof(Dungeon));
     if (not game->dungeon) {
         fprintf(stderr, "Falha ao alocar mémoria para a masmorra.\n");
         return false;
@@ -103,6 +103,9 @@ _Bool setupDungeon(Game *game) {
         lua_pop(game->lua, 1);
         return false;
     }
+
+    // Define o nível da masmorra.
+    game->dungeon->level = 1;
 
     // Cria uma sala para a masmorra.
     if (not addRoomToDungeon(game, "room_1", (SDL_Point) {0, 64})) {
@@ -168,24 +171,22 @@ void renderForegroundDungeon(Game *game) {
 
 // Função que destrói as salas e a masmorra.
 void destroyDungeon(Game *game) {
-    if (game->dungeon) {
-        // Começa pela primeira sala da masmorra.
-        Room *currentRoom = game->dungeon->room;
-        // Itera sobre todas as salas.
-        while (currentRoom not_eq NULL) {
-            // Guarda o ponteiro para a próxima sala.
-            Room *nextRoom = currentRoom->next;
-            // Libera a memória da sala atual.
-            free(currentRoom);
-            // Avança para a próxima sala.
-            currentRoom = nextRoom;
-        }
-
-        // Após liberar todas as salas, zera o ponteiro para a lista de salas e libera a memória da masmorra.
-        game->dungeon->room = NULL;
-        free(game->dungeon);
-        game->dungeon = NULL;
+    // Começa pela primeira sala da masmorra.
+    Room *currentRoom = game->dungeon->room;
+    // Itera sobre todas as salas.
+    while (currentRoom not_eq NULL) {
+        // Guarda o ponteiro para a próxima sala.
+        Room *nextRoom = currentRoom->next;
+        // Libera a memória da sala atual.
+        myFree(currentRoom);
+        // Avança para a próxima sala.
+        currentRoom = nextRoom;
     }
+
+    // Após liberar todas as salas, zera o ponteiro para a lista de salas e libera a memória da masmorra.
+    game->dungeon->room = NULL;
+    myFree(game->dungeon);
+    game->dungeon = NULL;
 }
 
 #endif //  DUNGEON_H

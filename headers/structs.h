@@ -30,6 +30,7 @@ typedef struct Room {
 // Estrutura que representa uma masmorra.
 typedef struct Dungeon {
     Room *room;
+    int level;
 } Dungeon;
 
 // Estrutura que representa os pontos de vida do jogador.

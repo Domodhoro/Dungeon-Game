@@ -49,6 +49,32 @@ _Bool isCursorInsideRect(const SDL_Point *cursorPosition, const SDL_Rect *dst) {
     return false;
 }
 
+// Função para criar e configurar um botão.
+Button createButton(Game *game, const char *label, SDL_Color textColor, int x, int y, int width, int height) {
+    Button newButton;
+    
+    // Define a textura do botão.
+    newButton.src = (SDL_Rect) {
+        0, 0, width, height
+    };
+    
+    // Define a posição do botão.
+    newButton.dst = (SDL_Rect) {
+        x, y, width, height
+    };
+    
+    // Cria o texto para o botão.
+    newButton.text = newText(game, label, 0, 0, textColor);
+    if (not newButton.text.texture) {
+        fprintf(stderr, "Falha ao criar texto para o botão %s.\n", label);
+    }
+    
+    // Posiciona o texto no centro do botão.
+    newButton.text.dst.x = (SCREEN_WIDTH - newButton.text.dst.w) / 2;
+    newButton.text.dst.y = y + (height - newButton.text.dst.h) / 2;
+    return newButton;
+}
+
 // Função que verifica a colisão do jogador com os blocos da masmorra.
 _Bool checkCollisionWithBlock(Game *game) {
     SDL_Rect blockDst;

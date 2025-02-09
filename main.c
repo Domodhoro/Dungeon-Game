@@ -4,7 +4,7 @@
 // Função principal.
 int main(int argc, char *argv[]) {
     // Cria uma instância do jogo.
-    Game *game = malloc(sizeof(Game));
+    Game *game = myMalloc(sizeof(Game));
     if (not game) {
         fprintf(stderr, "Falha ao alocar mémoria para a estrutura principal do jogo.\n");
         // Encerra o programa com falha.
@@ -40,11 +40,15 @@ int main(int argc, char *argv[]) {
 
     // Finaliza o jogo.
     finish(game);
+
     // Libera a memória alocada para a estrutura do jogo.
-    if (game) {
-        free(game);
-        game = NULL;
-    }
+    myFree(game);
+    game = NULL;
+    
+#if DEV
+    // Verificando se houve vazamento de memória.
+    printf("mallocCounter = %d.\n", getMallocCount());
+#endif // DEV
     // Encerra o programa com sucesso.
     return 0;
 }

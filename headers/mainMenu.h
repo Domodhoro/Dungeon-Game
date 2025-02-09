@@ -1,34 +1,6 @@
 #ifndef MAIN_MENU_H
 #define MAIN_MENU_H
 
-// Função para criar e configurar um botão.
-static _Bool createButton(Game *game, int buttonIndex, const char *label, int yPosition, SDL_Color textColor) {
-    const int buttonWidth  = 5 * 32;
-    const int buttonHeight = 32;
-    
-    // Define a textura do botão.
-    game->mainMenu.button[buttonIndex].src = (SDL_Rect) {
-        0, 0, buttonWidth, buttonHeight
-    };
-    
-    // Define a posição do botão.
-    game->mainMenu.button[buttonIndex].dst = (SDL_Rect) {
-        (SCREEN_WIDTH - buttonWidth) / 2, yPosition, buttonWidth, buttonHeight
-    };
-    
-    // Cria o texto para o botão.
-    game->mainMenu.button[buttonIndex].text = newText(game, label, 0, 0, textColor);
-    if (not game->mainMenu.button[buttonIndex].text.texture) {
-        fprintf(stderr, "Falha ao criar texto para o botão %s no menu principal.\n", label);
-        return false;
-    }
-    
-    // Posiciona o texto no centro do botão.
-    game->mainMenu.button[buttonIndex].text.dst.x = (SCREEN_WIDTH - game->mainMenu.button[buttonIndex].text.dst.w) / 2;
-    game->mainMenu.button[buttonIndex].text.dst.y = yPosition + (buttonHeight - game->mainMenu.button[buttonIndex].text.dst.h) / 2;
-    return true;
-}
-
 // Função responsável por criar e configurar o menu principal do jogo.
 _Bool setupMainMenu(Game *game) {
     // Define o espaçamento vertical entre os botões.
@@ -36,14 +8,9 @@ _Bool setupMainMenu(Game *game) {
     const int buttonIndent_2 = 100;
 
     // Cria o botão 'start'.
-    if (not createButton(game, 0, "Start", (SCREEN_HEIGHT - 32) / 2 - buttonIndent_1, BLACK)) {
-        return false;
-    }
-
+    game->mainMenu.button[0] = createButton(game, "Start", BLACK, (SCREEN_WIDTH - (5 * 32)) / 2, (SCREEN_HEIGHT - 32) / 2 - buttonIndent_1, 5 * 32, 32);
     // Cria o botão 'exit'.
-    if (not createButton(game, 1, "Exit", (SCREEN_HEIGHT - 32) / 2 - buttonIndent_2, BLACK)) {
-        return false;
-    }
+    game->mainMenu.button[1] = createButton(game, "Exit", BLACK, (SCREEN_WIDTH - (5 * 32)) / 2, (SCREEN_HEIGHT - 32) / 2 - buttonIndent_2, 5 * 32, 32);
 
     // Cria a versão do jogo.
     game->mainMenu.version = newText(game, "Version 1.0", 0, 0, GREEN);
